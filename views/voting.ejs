@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <style>
+            .kernel {
+                display: inline-block;
+                list-style-type: none;
+                vertical-align: top;
+                font-size: large;
+            }
+
+            .item {
+                display: block;
+                border: 1px solid black;
+                border-radius: 5px;
+                background-color: rgb(216, 216, 216);
+                padding: 2px 10px 2px 10px;
+                margin-top: 1px;
+                margin-bottom: 1px;
+                text-align: left;
+            }
+
+            #votewrapper {
+                text-align: center;
+                font-size: 0;
+                margin:auto;
+            }
+
+            #submitwrapper {
+                display: flex;
+                justify-content: center; 
+            }
+
+            #submit {
+                width: 50%;
+            }
+
+            .hidden {
+                visibility: hidden;
+            }
+
+            .placeholder {
+                height: 1.5em; 
+                line-height: 1.2em;
+                background-color: lightblue;
+                border-width: 1px 1px 1px 1px;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="css/navbar.css">
+    </head>
+    <body>
+        <%- include('./assets/navbar.ejs') %> 
+        <div id = "votewrapper">
+        <% for(let table of tables) { %>
+            <ul class = "kernel">
+                <% for(let resp of table) { %>
+                    <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %></li>
+                <% } %> 
+                </ul>
+        <% } %>
+        <br>
+        </div>
+        <div id = "submitwrapper">
+            <button id = "submit" onclick="onSubmit()">Submit Votes</button>
+        </div>
+        <script>
+            $(() => {
+               $('.kernel').sortable({
+                   placeholder: 'placeholder',
+                   tolerance: 'pointer',
+                   items: 'li:not(.hidden)'
+               }); 
+
+               $('.kernel').disableSelection();
+            });
+
+            window.onload = () => {
+                for(let elem of document.getElementsByTagName('ul')){
+                    let largestInChild = Array.from(elem.children)
+                        .reduce((p, c) => c.textContent.length > p.textContent.length ? c : p);
+
+                    let newelem = document.createElement('li');
+                    let textNode = document.createTextNode(largestInChild.textContent);
+
+                    newelem.classList.add('item', 'hidden');
+                    newelem.appendChild(textNode);
+                    elem.appendChild(newelem.cloneNode(true));
+                }
+            }
+
+            document.getElementById('submit').onclick = () => {
+                let res = "";
+                for(let elem of document.getElementsByClassName('kernel')){
+                    res += Array.from(elem.children)
+                        .filter(e => !e.classList.contains('hidden'))
+                        .map(e => e.attributes.getNamedItem('rid').value)
+                        .join(',') + " ";
+                }
+                fetch('/api/vote', { 
+                    method: 'POST',
+                    body: res,
+                    headers: {
+                        "Content-Type": "text/plain",
+                        "X-auth": '<%-user.id%>'
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

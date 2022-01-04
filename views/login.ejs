@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <meta name="google-signin-client_id" content="227209584109-g2qdae2772qogtcv46ca1jmksuht1fpu.apps.googleusercontent.com">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script>
+            function onSignIn(user) {
+                let profile = user.getBasicProfile();
+                let id = user.getAuthResponse().id_token;
+                let params = new URLSearchParams({
+                    user: profile.getName(),
+                    email: profile.getEmail(),
+                    id
+                });
+                window.location.href = `/auth/callback?${params.toString()}`;
+            }
+        </script>
+    </head>
+    <body>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    </body>
+</html>

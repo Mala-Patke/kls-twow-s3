@@ -1,0 +1,6 @@
+node_modules
+TODO
+.env
+*.txt
+.vscode
+.DS_Store

@@ -1,0 +1,51 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        Round ID: <input id = "round" value="<%- config.round %>"><br>
+        Mode: <select id="mode"> 
+            <option value="demo">Demo</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="respond">Respond</option>
+            <option value="vote">Vote</option>
+        </select><br>
+        Prompt: <input style = "width: 500px;" id = "prompt" value ="<%- config.prompt %>"><br>
+        Allow New Users?: <select id="ANU">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+        Random Seed: <input id = "seed" value="<%- config.seed %>">(CHANGE AFTER EVERY ROUND)<br>
+
+        <button id = "submit">Submit Changes</button>
+    </body> 
+
+    <script>
+        window.onload = () => {
+            Array.from(document.getElementById('mode').children)
+                .find(e => e.value === '<%-config.mode%>')
+                .setAttribute('selected', '');
+        }
+        document.getElementById('submit').addEventListener('click', () => {
+            console.log({
+                    round: document.getElementById('round').value,
+                    mode: document.getElementById('mode').value,
+                    prompt: document.getElementById('prompt').value,
+                    allowingNewUsers: document.getElementById('ANU').value === "Yes"
+                });
+            fetch('/api/updateconfig', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'round': document.getElementById('round').value,
+                    'mode': document.getElementById('mode').value,
+                    'prompt': document.getElementById('prompt').value,
+                    'allowingNewUsers': document.getElementById('ANU').value === "Yes",
+                    'seed': document.getElementById('seed').value
+                }),
+                headers: {
+                    'Content-Type':'text/plain'
+                }
+            }).then(() => window.location.href = '/')
+        });
+    </script>
+</html>

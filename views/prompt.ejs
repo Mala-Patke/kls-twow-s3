@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <style>
+            #input {
+                width:50%;
+            }
+
+            #submit {
+                margin-top: 10px;
+                padding: 5px 20px;
+                border-radius: 10px;
+                border: none;
+                background-color: lightskyblue;
+            }
+
+            #submit:hover {
+                cursor: pointer;
+                background-color: lightgreen;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="css/center.css">
+        <link rel="stylesheet" type="text/css" href="css/navbar.css">
+    </head>
+
+    <body>
+        <%- include('./assets/navbar.ejs') %>
+        <div class="center">
+            <h2>Response time!</h2>
+            <h3>In 10 words, give your best answer to the following prompt:</h3>
+            <h1><%- prompt %></h1>
+            <input id="input"><br>
+            <button id="submit">Submit</button>
+        </div>
+
+        <script>
+            document.getElementById('submit').addEventListener('click', e => {
+                let sub = document.getElementById('input').value;
+                fetch('/api/respond', {
+                    method: 'POST',
+                    body: sub,
+                    headers: {
+                        "Content-Type": "text/plain",
+                        "X-auth": '<%-user.id%>'
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,9 @@
+html, body, .center {
+    height: 100%;
+}
+
+.center {
+    position: relative;
+    top:30%;
+    text-align: center;
+}

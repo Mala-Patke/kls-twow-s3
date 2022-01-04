@@ -1,0 +1,7 @@
+{
+    "round": "Round 1",
+    "mode": "vote",
+    "prompt": "Why do we exist?",
+    "allowingNewUsers": true,
+    "seed":10
+}
