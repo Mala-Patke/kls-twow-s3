@@ -3,4 +3,5 @@ TODO
 .env
 *.txt
 .vscode
-.DS_Store
+*.DS_Store
+config.json
