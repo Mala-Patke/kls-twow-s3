@@ -15,6 +15,7 @@
             <option value="Yes">Yes</option>
             <option value="No">No</option>
         </select><br>
+        Responses Per Screen:<input id = "screen" value ="<%- config.resp_per_screen %>"><br>
         Random Seed: <input id = "seed" value="<%- config.seed %>">(CHANGE AFTER EVERY ROUND)<br>
 
         <button id = "submit">Submit Changes</button>
@@ -27,18 +28,13 @@
                 .setAttribute('selected', '');
         }
         document.getElementById('submit').addEventListener('click', () => {
-            console.log({
-                    round: document.getElementById('round').value,
-                    mode: document.getElementById('mode').value,
-                    prompt: document.getElementById('prompt').value,
-                    allowingNewUsers: document.getElementById('ANU').value === "Yes"
-                });
             fetch('/api/updateconfig', {
                 method: 'POST',
                 body: JSON.stringify({
                     'round': document.getElementById('round').value,
                     'mode': document.getElementById('mode').value,
                     'prompt': document.getElementById('prompt').value,
+                    'resp_per_screen': document.getElementById('screen').value,
                     'allowingNewUsers': document.getElementById('ANU').value === "Yes",
                     'seed': document.getElementById('seed').value
                 }),

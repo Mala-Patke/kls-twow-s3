@@ -15,12 +15,11 @@ function shuffle(arr, seed){
     return ret;
 }
 
-module.exports = function(responses, seed){
+module.exports = function(responses, seed, resp_per_tables){
     //Seeded Shuffle Array so each user gets the same random order.
     responses = shuffle(Object.entries(responses), seed);
 
     //Create appropriate number of tables
-    let resp_per_tables = 4;
     let tables = [];
     for(let i = 0; i < Math.round(responses.length/resp_per_tables-0.001); i++) {
         tables.push([]);

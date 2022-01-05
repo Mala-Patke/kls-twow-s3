@@ -3,5 +3,6 @@
     "mode": "vote",
     "prompt": "Why do we exist?",
     "allowingNewUsers": true,
+    "resp_per_screen": 4,
     "seed":10
 }
