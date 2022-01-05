@@ -3,6 +3,7 @@
         <style>
             #input {
                 width:50%;
+                font-size: larger;
             }
 
             #submit {
@@ -17,6 +18,15 @@
                 cursor: pointer;
                 background-color: lightgreen;
             }
+
+            .main {
+                text-align: center;
+                font-family: PT Sans,sans-serif;
+            }
+
+            h1 {
+                padding-top: 50px;
+            }
         </style>
         <link rel="stylesheet" type="text/css" href="css/center.css">
         <link rel="stylesheet" type="text/css" href="css/navbar.css">
@@ -24,7 +34,7 @@
 
     <body>
         <%- include('./assets/navbar.ejs') %>
-        <div class="center">
+        <div class = "main" style="top:25%">
             <h2>Response time!</h2>
             <h3>In 10 words, give your best answer to the following prompt:</h3>
             <h1><%- prompt %></h1>
