@@ -40,10 +40,12 @@
             <h1><%- prompt %></h1>
             <input id="input"><br>
             <button id="submit">Submit</button>
+            <span id = "subreq"></span>
         </div>
 
         <script>
             document.getElementById('submit').addEventListener('click', e => {
+                document.getElementById('submit').setAttribute('disabled', '');
                 let sub = document.getElementById('input').value;
                 fetch('/api/respond', {
                     method: 'POST',
@@ -52,6 +54,8 @@
                         "Content-Type": "text/plain",
                         "X-auth": '<%-user.id%>'
                     }
+                }).then(() => {
+                    document.getElementById('subreq').innerText = "Response submitted! Refresh the page if you'd like to resubmit your vote.";
                 });
             });
         </script>

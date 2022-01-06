@@ -10,6 +10,11 @@
                 font-size: large;
             }
 
+            .border {
+                border: 1px solid black;
+                padding: 3px;
+            }
+
             .item {
                 display: block;
                 border: 1px solid black;
@@ -28,13 +33,27 @@
                 font-family: Helvetica, sans-serif;
             }
 
+            #info {
+                text-align: center;
+            }
+
             #submitwrapper {
                 display: flex;
-                justify-content: center; 
+                flex-direction: column;
+                align-items: center; 
             }
 
             #submit {
-                width: 50%;
+                margin-top: 10px;
+                padding: 5px 20px;
+                border-radius: 10px;
+                border: none;
+                background-color: lightskyblue;
+            }
+
+            #submit:hover {
+                cursor: pointer;
+                background-color: lightgreen;
             }
 
             .hidden {
@@ -44,7 +63,7 @@
             .placeholder {
                 height: 1.5em; 
                 line-height: 1.2em;
-                background-color: lightblue;
+                background-color: lightskyblue;
                 border-width: 1px 1px 1px 1px;
             }
         </style>
@@ -52,19 +71,28 @@
         <link rel="stylesheet" type="text/css" href="css/navbar.css">
     </head>
     <body>
-        <%- include('./assets/navbar.ejs') %> 
+        <%- include('./assets/navbar.ejs') %>
+        <div id = "info">
+            <h2>Voting time!</h2>
+            <h3>Vote on your favorite responses to the prompt:</h3>
+            <h1><%-prompt%></h1>
+            <h3>Within each table, drag and drop to order each prompt from most favorite to least.</h3>
+        </div>
         <div id = "votewrapper">
         <% for(let table of tables) { %>
             <ul class = "kernel">
-                <% for(let resp of table) { %>
-                    <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %></li>
-                <% } %> 
-                </ul>
+                <div class = "border">
+                    <% for(let resp of table) { %>
+                        <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %></li>
+                    <% } %> 
+                </div>
+            </ul>
         <% } %>
         <br>
         </div>
         <div id = "submitwrapper">
             <button id = "submit" onclick="onSubmit()">Submit Votes</button>
+            <span id = "subreq"></span>
         </div>
         <script>
             $(() => {
@@ -79,7 +107,7 @@
 
             window.onload = () => {
                 for(let elem of document.getElementsByTagName('ul')){
-                    let largestInChild = Array.from(elem.children)
+                    let largestInChild = Array.from(elem.children[0].children)
                         .reduce((p, c) => c.textContent.length > p.textContent.length ? c : p);
 
                     let newelem = document.createElement('li');
@@ -92,6 +120,7 @@
             }
 
             document.getElementById('submit').onclick = () => {
+                document.getElementById('submit').setAttribute('disabled', '');
                 let res = "";
                 for(let elem of document.getElementsByClassName('kernel')){
                     res += Array.from(elem.children)
@@ -106,6 +135,8 @@
                         "Content-Type": "text/plain",
                         "X-auth": '<%-user.id%>'
                     }
+                }).then(() => {
+                    document.getElementById('subreq').innerText = "Votes submitted! Refresh the page if you'd like to resubmit your vote.";
                 });
             }
         </script>

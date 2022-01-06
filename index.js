@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
             db.getResponses(req.config.round)
             .then(resps => {
                 let tables = createVotingTables(resps, req.config.seed, req.config.resp_per_screen);
-                res.render('voting', { tables, user: req.session.user });
+                res.render('voting', { tables, prompt: req.config.prompt, user: req.session.user });
             });
         }
     }
