@@ -1,13 +1,14 @@
 const express = require('express');
 const session = require('express-session');
 const { join } = require('path');
-const { readdirSync } = require('fs');
 const db = require('./database/dbwrapper');
 const User = require('./structures/user');
 const createVotingTables = require('./structures/tables');
 require('dotenv').config();
 
-db.handleConfigUpdate(require('./config.json'));
+try{
+    db.handleConfigUpdate(require('./config.json'));
+} catch {}
 
 const app = express();
 app.set('view engine', 'ejs');
