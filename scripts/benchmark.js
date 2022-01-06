@@ -1,11 +1,10 @@
 const db = require('../database/dbwrapper');
 
 (async function(){
-    let startdate = Date.now();
+    console.time('t');
     let config = await db.getConfig();
-    console.log(`Read: ${Date.now() - startdate}ms`);
-    startdate = Date.now()
+    console.timeLog('t', 'Read');
     db.handleConfigUpdate(config)
-    console.log(`Write: ${Date.now() - startdate}ms`);
+    console.timeLog('t', 'Write');
     process.exit();
 })();
