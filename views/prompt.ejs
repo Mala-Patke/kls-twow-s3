@@ -44,6 +44,15 @@
         </div>
 
         <script>
+            window.onload = () => {
+                if("<%-user.isOut%>" === "true"){
+                    let inp = document.getElementById('input');
+                    inp.setAttribute('placeholder', "Sorry, you've been eliminated. You can't respond this round")
+                    inp.setAttribute('disabled', '');
+                    document.getElementById('submit').setAttribute('disabled', '');
+                }
+            }
+
             document.getElementById('submit').addEventListener('click', e => {
                 document.getElementById('submit').setAttribute('disabled', '');
                 let sub = document.getElementById('input').value;
