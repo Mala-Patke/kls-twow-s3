@@ -12,7 +12,8 @@
 
             .border {
                 border: 1px solid black;
-                padding: 3px;
+                padding: 4px;
+                border-radius: 5px;
             }
 
             .item {
@@ -20,7 +21,7 @@
                 border: 1px solid black;
                 border-radius: 5px;
                 background-color: rgb(216, 216, 216);
-                padding: 2px 10px 2px 10px;
+                padding: 2px 10px;
                 margin-top: 1px;
                 margin-bottom: 1px;
                 text-align: left;
@@ -76,7 +77,7 @@
             <h2>Voting time!</h2>
             <h3>Vote on your favorite responses to the prompt:</h3>
             <h1><%-prompt%></h1>
-            <h3>Within each table, drag and drop to order each prompt from most favorite to least.</h3>
+            <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom)..</h3>
         </div>
         <div id = "votewrapper">
         <% for(let table of tables) { %>
@@ -111,7 +112,7 @@
                         .reduce((p, c) => c.textContent.length > p.textContent.length ? c : p);
 
                     let newelem = document.createElement('li');
-                    let textNode = document.createTextNode(largestInChild.textContent);
+                    let textNode = document.createTextNode(largestInChild.textContent + "padding");
 
                     newelem.classList.add('item', 'hidden');
                     newelem.appendChild(textNode);
