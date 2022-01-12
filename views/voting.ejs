@@ -123,7 +123,7 @@
             document.getElementById('submit').onclick = () => {
                 document.getElementById('submit').setAttribute('disabled', '');
                 let res = "";
-                for(let elem of document.getElementsByClassName('kernel')){
+                for(let elem of document.getElementsByClassName('border')){
                     res += Array.from(elem.children)
                         .filter(e => !e.classList.contains('hidden'))
                         .map(e => e.attributes.getNamedItem('rid').value)
