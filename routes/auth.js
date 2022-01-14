@@ -5,6 +5,13 @@ const User = require('../structures/user');
 const router = express.Router();
 const client = new OAuth2Client('227209584109-ut44j08p0m1mrr70k0d6jhp3nus7rgc6.apps.googleusercontent.com');
 
+const rename = {
+    "Katarina":"Ainsel",
+    "Eric":"Sylvan",
+    "Leia":"Raine",
+    "Alisha":"Zaiga"
+};
+
 function verifyToken(idToken){
     return new Promise((res, rej) => {
         client.verifyIdToken({
@@ -25,6 +32,8 @@ router.get('/callback', async (req, res) => {
     if(verify.email !== req.query.email) return res.sendStatus(400);
     if(!req.query.email.endsWith('khanlabschool.org')) return res.sendStatus(403);
 
+    let firstname = req.query.username.split(" ")[0];
+    if(Object.keys(rename).includes(firstname)) req.query.username.replace(firstname, rename[firstname]);
     let userdata = await User.register(req.query.user);
     req.session.user = userdata;
 
