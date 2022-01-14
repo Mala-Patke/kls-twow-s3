@@ -2,13 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const { join } = require('path');
 const db = require('./database/dbwrapper');
-const User = require('./structures/user');
 const createVotingTables = require('./structures/tables');
 require('dotenv').config();
-
-try{
-    db.handleConfigUpdate(require('./config.json'));
-} catch {}
 
 const app = express();
 app.set('view engine', 'ejs');
