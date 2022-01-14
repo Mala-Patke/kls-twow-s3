@@ -39,7 +39,7 @@
             <h3>In 10 words, give your best answer to the following prompt:</h3>
             <h1><%- prompt %></h1>
             <input id="input"><br>
-            <button id="submit">Submit</button>
+            <button id="submit">Submit</button><br>
             <span id = "subreq"></span>
         </div>
 
@@ -53,6 +53,10 @@
                 }
             }
 
+            document.getElementById('submit').addEventListener('keydown', e => {
+                if(e.target.value.split(/ +/).length < 16) return e.preventDefault();
+            });
+
             document.getElementById('submit').addEventListener('click', e => {
                 document.getElementById('submit').setAttribute('disabled', '');
                 let sub = document.getElementById('input').value;
@@ -65,6 +69,8 @@
                     }
                 }).then(() => {
                     document.getElementById('subreq').innerText = "Response submitted! Refresh the page if you'd like to resubmit your vote.";
+                }).catch(e => {
+                    document.getElementById('subreq').innerText = "ERROR: " + e;
                 });
             });
         </script>
