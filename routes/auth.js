@@ -32,7 +32,7 @@ router.get('/callback', async (req, res) => {
     if(verify.email !== req.query.email) return res.sendStatus(400);
     if(!req.query.email.endsWith('khanlabschool.org')) return res.sendStatus(403);
 
-    let firstname = req.query.username.split(" ")[0];
+    let firstname = req.query.user.username.split(" ")[0];
     if(Object.keys(rename).includes(firstname)) req.query.username.replace(firstname, rename[firstname]);
     let userdata = await User.register(req.query.user);
     req.session.user = userdata;
