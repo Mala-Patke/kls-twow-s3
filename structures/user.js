@@ -26,18 +26,14 @@ class User {
      */
     set(key, value){
         return new Promise((res, rej) => {
-            this.data.then(data => {
-                let obj = {}
-                if(!!data) obj = data;
                 set(this.ref, 
-                    Object.defineProperty(obj, key, {
+                    Object.defineProperty({}, key, {
                         value,
                         enumerable: true
                     })
                 ).then(() => this[key] = value)
                 .then(res)
                 .catch(rej);
-            }).catch(rej);
         });
     }
 
