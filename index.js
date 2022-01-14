@@ -28,13 +28,6 @@ app.use(async (req, res, next) => {
         next(e)
     }
 
-    //Express session decides to not save the entire user object but only the ID for some reason
-    if(req.session.user){
-        let user = new User(req.session.user.id);
-        let data = await user.data;
-        req.session.user = data;    
-    }
-
     next();
 });
 

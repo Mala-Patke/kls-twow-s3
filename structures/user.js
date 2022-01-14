@@ -3,40 +3,27 @@ const { PBKDF2 } = require('crypto-js');
 const db = require('../database/firebase-init');
 require('dotenv').config();
 
-class UserEnum {
-    /** @type {string} */
-    username;
-    /** @type {boolean} */
-    isOut;
-}
-
 class User {
-    constructor(id){
+    constructor(id, username, isOut, isBanned, seed) {
         this.id = id;
+        this.username = username;
+        this.isOut = isOut;
+        this.isBanned = isBanned;
+        this.seed = seed;
     }
 
     /**
      * @private 
      */
-    get ref() {
+     get ref() {
         return _ref(db, 'userdata/' + this.id);
     }
 
     /**
-     * @returns {Promise<UserEnum>}
+     * @param {string} key 
+     * @param {string} value 
+     * @returns {Promise<void>}
      */
-    get data(){
-        return new Promise((res, rej) => {
-            onValue(this.ref, data => {
-                if(data.val() === null || !data.val()) return res(false);
-                res(Object.defineProperty(data.val(), "id", {
-                    value: this.id,
-                    enumerable: true
-                }));
-            }, rej, { onlyOnce: true });
-        });
-    }
-
     set(key, value){
         return new Promise((res, rej) => {
             this.data.then(data => {
@@ -47,25 +34,51 @@ class User {
                         value,
                         enumerable: true
                     })
-                ).then(res).catch(rej);
+                ).then(() => this[key] = value)
+                .then(res)
+                .catch(rej);
             }).catch(rej);
         });
     }
 
     /**
-     * @param {string} username 
-     * @returns {User}
+     * @param {string} id 
+     * @returns {Promise<User>}
      */
-    static async registerUser(username){
-        let id = PBKDF2(username, process.env.SALT, { keySize: 2 }).toString();
-        let user = new this(id);
-        let exists = await user.data;
+    static build(id){
+        return new Promise((res, rej) => {
+            onValue(_ref(db, `userdata/${id}`), ({ val }) => {
+                let data = val();
+                res(new this(
+                    id, data.username, data.isOut, data.isBanned, data.seed
+                ));
+            }, rej, { onlyOnce: true });
+        });
+    }
 
-        if(!exists) {
-            await user.set("isOut", false);
-            await user.set("username", username);
-        }
-        return user;
+    /**
+     * @param {string} username 
+     * @returns {Promise<User>}
+     */
+    static register(username){
+        return new Promise((res, rej) => {
+            let id = PBKDF2(username, process.env.SALT, { keySize: 2 }).toString();
+            onValue(_ref(db, `userdata/${id}`), data => {
+                if(data.val()) res(this.build(id));
+                
+                let seed = Math.floor(Math.random() * 10);
+                let user = new this(id, username, false, false, seed);
+
+                user.set('username', user.username);
+                user.set('isOut', user.isOut);
+                user.set('isBanned', user.isBanned);
+                user.set('seed', user.seed);
+
+                res(user);
+
+            }, rej, { onlyOnce: true });
+    
+        });
     }
 }
 

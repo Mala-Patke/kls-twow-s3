@@ -25,10 +25,8 @@ router.get('/callback', async (req, res) => {
     if(verify.email !== req.query.email) return res.sendStatus(400);
     if(!req.query.email.endsWith('khanlabschool.org')) return res.sendStatus(403);
 
-    let userdata = await User.registerUser(req.query.user);
-
-    req.session.user = userdata; //WHY ISN"T THIS WORKING AAAAAAAAAAA
-    req.session.save();
+    let userdata = await User.register(req.query.user);
+    req.session.user = userdata;
 
     res.redirect('/');
 });
