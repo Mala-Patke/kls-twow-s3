@@ -55,7 +55,7 @@
 
             document.getElementById('submit').addEventListener('keydown', e => {
                 let target = document.getElementById('submit');
-                if(target.value.split(/ +/).length < 15) return e.preventDefault();
+                if(target.value.split(/\s+/).length < 15) e.preventDefault();
             });
 
             document.getElementById('submit').addEventListener('click', e => {
