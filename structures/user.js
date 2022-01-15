@@ -4,12 +4,11 @@ const db = require('../database/firebase-init');
 require('dotenv').config();
 
 class User {
-    constructor(id, username, isOut, isBanned, seed) {
+    constructor(id, username, isOut, isBanned) {
         this.id = id;
         this.username = username;
         this.isOut = isOut;
         this.isBanned = isBanned;
-        this.seed = seed;
     }
 
     /**
@@ -50,7 +49,7 @@ class User {
         return new Promise((res, rej) => {
             onValue(_ref(db, `userdata/${id}`), (data) => {
                 res(new this(
-                    id, data.username, data.isOut, data.isBanned, data.seed
+                    id, data.username, data.isOut, data.isBanned
                 ));
             }, rej, { onlyOnce: true });
         });
@@ -66,14 +65,12 @@ class User {
             onValue(_ref(db, `userdata/${id}`), data => {
                 if(data.val()) this.build(id).then(res)
                 
-                let seed = Math.floor(Math.random() * 10);
-                let user = new this(id, username, false, false, seed);
+                let user = new this(id, username, false, false);
 
                 user.set({
                     username: user.username,
                     isOut: user.isOut,
-                    isBanned: user.isBanned,
-                    seed: user.seed
+                    isBanned: user.isBanned
                 });
 
                 res(user);
