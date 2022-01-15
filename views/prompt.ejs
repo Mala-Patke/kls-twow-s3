@@ -54,7 +54,8 @@
             }
 
             document.getElementById('submit').addEventListener('keydown', e => {
-                if(e.target.value.split(/ +/).length < 16) return e.preventDefault();
+                let target = document.getElementById('submit');
+                if(target.value.split(/ +/).length < 15) return e.preventDefault();
             });
 
             document.getElementById('submit').addEventListener('click', e => {
