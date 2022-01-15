@@ -33,7 +33,7 @@ module.exports = function(resps, round, id, resp_per_tables){
     while(responses.length){
         let resp = responses.pop();
         if(!tables[iter]) iter = 0;
-        tables[iter].push(`${resp} (${resp.split(" ").length})`);
+        tables[iter].push(resp);
         iter++;
     }
 
