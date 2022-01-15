@@ -10,7 +10,6 @@ const rename = {
     "Eric":"Sylvan",
     "Leia":"Raine",
     "Alisha":"Zaiga",
-    "Ali":"Administrator"
 };
 
 function verifyToken(idToken){
