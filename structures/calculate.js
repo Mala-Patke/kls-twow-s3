@@ -27,7 +27,7 @@ function percentile(lim, pos){
  * average all scores and turn into percent form
  * standard deviation of the set to taste
  */
-function calculate(votes){
+function calculate(votes, users, responses){
     let prct = {};
     for(let vote of Object.values(votes)){
         let splitvotes = vote.split(" ").map(e => e.split(","));
@@ -40,8 +40,9 @@ function calculate(votes){
     }
     let ret = {}; 
     for(let entry of Object.entries(prct)){
-        ret[entry[0]] = {
-            entry: entry[1],
+        let user = users[entry[0]];
+        if(user) ret[user.username] = {
+            response: responses[entry[0]],
             avg: avg(entry[1]),
             stdev: stdev(entry[1])
         }

@@ -37,7 +37,15 @@ module.exports.getVotes = function(round){
 module.exports.getConfig = function(){
     return new Promise((res, rej) => {
         onValue(ref('config'), data => {
-            res(data.toJSON())
+            res(data.toJSON());
         }, rej, { onlyOnce: true })
     })
+}
+
+module.exports.getUsers = function(){
+    return new Promise((res, rej) => {
+        onValue(ref('userdata'), data => {
+            res(data.toJSON());
+        }, rej, { onlyOnce: true });
+    });
 }
