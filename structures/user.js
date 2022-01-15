@@ -34,7 +34,11 @@ class User {
                     });
                 }
                 set(this.ref, ret)
-                    .then(() => this[key] = value)
+                    .then(() => {
+                        for(let elem of Object.entries(obj)){
+                            this[elem[0]] === elem[1];
+                        }
+                    })
                     .then(res)
                     .catch(rej);
             })
