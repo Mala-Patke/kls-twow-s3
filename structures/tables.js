@@ -15,9 +15,12 @@ function shuffle(arr, seed){
     return ret;
 }
 
-module.exports = function(responses, seed, resp_per_tables){
+module.exports = function(resps, round, id, resp_per_tables){
+    //Create seed from user and round ids.
+    let seed = parseInt(id.replace(/[^0-9]/gi, '')) * parseInt(round.replace(/[^0-9]/gi, ''));
+
     //Seeded Shuffle Array so each user gets the same random order.
-    responses = shuffle(Object.entries(responses), seed);
+    let responses = shuffle(Object.entries(resps), seed);
 
     //Create appropriate number of tables
     let tables = [];
