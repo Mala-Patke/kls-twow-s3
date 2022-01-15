@@ -24,16 +24,21 @@ class User {
      * @param {string} value 
      * @returns {Promise<void>}
      */
-    set(key, value){
+    set(obj){
         return new Promise((res, rej) => {
-                set(this.ref, 
-                    Object.defineProperty({}, key, {
-                        value,
+            onValue(this.ref, data => {
+                let ret = data.val();
+                for(let elem of Object.entries(obj)){
+                    Object.defineProperty(ret, elem[0], {
+                        value:elem[1],
                         enumerable: true
-                    })
-                ).then(() => this[key] = value)
-                .then(res)
-                .catch(rej);
+                    });
+                }
+                set(this.ref, ret)
+                    .then(() => this[key] = value)
+                    .then(res)
+                    .catch(rej);
+            })
         });
     }
 
@@ -59,15 +64,17 @@ class User {
         return new Promise((res, rej) => {
             let id = PBKDF2(username, process.env.SALT, { keySize: 2 }).toString();
             onValue(_ref(db, `userdata/${id}`), data => {
-                if(data.val()) res(this.build(id));
+                if(data.val()) this.build(id).then(res)
                 
                 let seed = Math.floor(Math.random() * 10);
                 let user = new this(id, username, false, false, seed);
 
-                user.set('username', user.username);
-                user.set('isOut', user.isOut);
-                user.set('isBanned', user.isBanned);
-                user.set('seed', user.seed);
+                user.set({
+                    username: user.username,
+                    isOut: user.isOut,
+                    isBanned: user.isBanned,
+                    seed: user.seed
+                });
 
                 res(user);
 
