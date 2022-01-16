@@ -54,7 +54,7 @@
             }
 
             document.getElementById('input').addEventListener('keydown', e => {
-                if(e.currentTarget.value.split(/\s+/).length > 15) e.preventDefault();
+                if(e.currentTarget.value.split(/\s+/).length > 15 && e.keyCode !== 8) e.preventDefault();
             });
 
             document.getElementById('submit').addEventListener('click', e => {
