@@ -23,6 +23,7 @@
 .img-link {
     justify-self: flex-start;
     height: 60px;
+    margin-left: 20px;
 }
 
 .img-link img {
