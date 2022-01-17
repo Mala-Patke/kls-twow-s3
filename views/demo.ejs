@@ -4,19 +4,25 @@
         <link rel="stylesheet" type="text/css" href="css/navbar.css">
         <link rel="stylesheet" type="text/css" href="css/leaderboard.css">
         <style>
-            body {
+            .flex {
                 display: flex;
-                align-items: left;
-                justify-content: center;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+
+            .center {
+                align-self: center;
             }
         </style>
     </head>
     <body>
         <%- include('./assets/navbar.ejs') %> 
-        <%- include('./assets/leaderboard.ejs', { leaderboard: ["a", "b", "c"]}) %>
-        <div class="center">
-            <h1>Thanks for registering, <%- user.username %>!</h1>
-            <h2>Competition begins shortly. Stay Tuned!</h2>
+        <div class = "flex">
+            <%- include('./assets/leaderboard.ejs', { leaderboard: ["a", "b", "c"]}) %>
+            <div class="center">
+                <h1>Thanks for registering, <%- user.username %>!</h1>
+                <h2>Competition begins shortly. Stay Tuned!</h2>
+            </div>
         </div>
     </body>
 </html>

@@ -34,7 +34,7 @@
 nav {
     background-color: rgb(206, 206, 206);
     overflow: auto;
-
+    position: absolute;
     display: flex;
     flex-direction: row;
 }
