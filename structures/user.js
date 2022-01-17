@@ -51,8 +51,8 @@ class User {
      */
     static build(id) {
         return new Promise((res, rej) => {
-            onValue(_ref(db, `userdata/${id}`), (result) => {
-                let data = le.val();
+            onValue(_ref(db, `userdata/${id}`), data => {
+                data = data.val();
                 res(new this(
                     id, data.username, data.isOut, data.isBanned
                 ));
