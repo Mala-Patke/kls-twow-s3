@@ -1,7 +1,9 @@
 const express = require('express');
 const session = require('express-session');
+const FirebaseStore = require('connect-session-firebase');
 const { join } = require('path');
 const db = require('./database/dbwrapper');
+const dbref = require('./database/firebase-init')
 const createVotingTables = require('./structures/tables');
 require('dotenv').config();
 
@@ -10,6 +12,9 @@ app.set('view engine', 'ejs');
 app.disable('x-powered-by'); 
 
 app.use(session({
+    store: new FirebaseStore({
+        database: dbref
+    }),
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false
