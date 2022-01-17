@@ -4,6 +4,7 @@ const { join } = require('path');
 const db = require('./database/dbwrapper');
 const dbref = require('./database/firebase-init')
 const createVotingTables = require('./structures/tables');
+const User = require('./structures/user');
 require('dotenv').config();
 
 const app = express();
@@ -23,7 +24,7 @@ app.use(async (req, res, next) => {
     } catch (e){
         next(e)
     }
-
+    if(req.session.user) req.session.user = await User.build(req.session.user.id);
     next();
 });
 
