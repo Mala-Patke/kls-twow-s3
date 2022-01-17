@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 app.disable('x-powered-by'); 
 
 app.use(session({
-    store: new FirebaseStore({
+    store: FirebaseStore({
         database: dbref
     }),
     secret: process.env.SESSION_SECRET,
