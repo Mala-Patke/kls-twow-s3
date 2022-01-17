@@ -7,24 +7,24 @@
             .flex {
                 display: flex;
                 align-items: flex-start;
-                justify-content: space-evenly;
+                justify-content: space-between;
                 height: 100%;
             }
 
             .center {
-                align-self: center;
+                text-align: center;
             }
         </style>
     </head>
     <body>
         <%- include('./assets/navbar.ejs') %> 
         <div class = "flex">
-            <%- include('./assets/leaderboard.ejs', { leaderboard: ["a", "b", "c"]}) %>
-            <div class="center">
+            <%- include('./assets/leaderboard.ejs', { leaderboard: ["a", "b", "c"] }) %>
+            <div class = "center">
                 <h1>Thanks for registering, <%- user.username %>!</h1>
                 <h2>Competition begins shortly. Stay Tuned!</h2>
             </div>
-            <%- include('./assets/leaderboard.ejs', { leaderboard: ["d", "e", "f"]}) %>
+            <%- include('./assets/leaderboard.ejs', { leaderboard: ["d", "e", "f"], right: 1}) %>
         </div>
     </body>
 </html>
