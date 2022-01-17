@@ -5,6 +5,7 @@
     </head>
     <body>
         <%- include('./assets/navbar.ejs') %> 
+        <% include('./assets/leaderboard.ejs', { leaderboard: ["a", "b", "c"]}) %>
         <div class="center">
             <h1>Thanks for registering, <%- user.username %>!</h1>
             <h2>Competition begins shortly. Stay Tuned!</h2>
