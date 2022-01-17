@@ -39,6 +39,7 @@ router.get('/callback', async (req, res) => {
     if(userdata.isBanned) return res.status(403).send("You have been banned. If you think this was a mistake, please contact us.");
     req.session.user = userdata;
 
+    console.log(userdata, req.session.user)
     res.redirect('/');
 });
 
