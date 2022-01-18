@@ -28,7 +28,7 @@ class User {
             onValue(this.ref, data => {
                 let ret = data.val();
                 for (let elem of Object.entries(obj)) {
-                    Object.defineProperty(ret, elem[0], {
+                    Object.defineProperty(ret || {}, elem[0], {
                         value: elem[1],
                         enumerable: true
                     });
