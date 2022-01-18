@@ -2,21 +2,28 @@ const express = require('express');
 const session = require('express-session');
 const { join } = require('path');
 const db = require('./database/dbwrapper');
-const dbref = require('./database/firebase-init')
-const createVotingTables = require('./structures/tables');
-const User = require('./structures/user');
+const createVotingTables = require('./lib/tables');
+const User = require('./lib/user');
+const log = require('./lib/webhooklogger');
 require('dotenv').config();
 
 const app = express();
 app.set('view engine', 'ejs');
 app.disable('x-powered-by'); 
 
+function handleError(e) {
+    log(`Hey <@674140360079048714>, there's a fatal error with TWOW: \`${e}.\``);
+}
+
+process.on('unhandledRejection', handleError);
+process.on('uncaughtException', handleError);
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false
 }));
-
+a
 app.use(async (req, res, next) => {
     try{
         //This is very inneficient. I do not like this
@@ -69,4 +76,4 @@ app.get('/config', async (req, res) => {
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening on http://localhost:${process.env.PORT}`)
-})
+});

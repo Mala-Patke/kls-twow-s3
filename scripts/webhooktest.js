@@ -1,0 +1,1 @@
+console.log(require('../lib/webhooklogger')(process.argv.slice(2).join(" ")));

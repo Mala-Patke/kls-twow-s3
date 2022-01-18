@@ -1,7 +1,7 @@
 const express = require('express');
 const { writeFileSync } = require('fs');
 const db = require('../database/dbwrapper');
-const calculate = require('../structures/calculate');
+const calculate = require('../lib/calculate');
 
 const router = express.Router();
 

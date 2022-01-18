@@ -1,6 +1,6 @@
 const express = require('express');
 const { OAuth2Client } = require('google-auth-library');
-const User = require('../structures/user');
+const User = require('../lib/user');
 
 const router = express.Router();
 const client = new OAuth2Client('227209584109-f54odnr6tn70muiu4fdqqrfbsbanm6cf.apps.googleusercontent.com');
