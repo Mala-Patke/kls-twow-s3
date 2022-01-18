@@ -61,12 +61,8 @@ app.get('/', (req, res) => {
     swich[req.config.mode]();
 });
 
-app.get('faq', (req, res) => res.render('faq'));
-app.get('tos', (req, res) => res.render('tos'));
-
 app.get('/config', async (req, res) => {
     if(!req.session.user) return res.redirect('/auth/main');
-    console.log(req.session.user);
     if(!["Timothy Chien", "Ali Shahid"].includes(req.session.user.username)) return res.redirect('/');
     res.render('modview', { config: req.config });    
 });
