@@ -48,13 +48,13 @@ app.get('/', (req, res) => {
             res.render('demo', { user: req.session.user });
         },
         "respond": () => {
-            res.render('prompt', { prompt: req.config.prompt, user: req.session.user });
+            res.render('prompt', { prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
         },
         "vote": () => {
             db.getResponses(req.config.round)
             .then(resps => {
                 let tables = createVotingTables(resps, req.config.round, req.session.user.id, req.config.resp_per_screen);
-                res.render('voting', { tables, prompt: req.config.prompt, user: req.session.user });
+                res.render('voting', { tables, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
             });
         }
     }

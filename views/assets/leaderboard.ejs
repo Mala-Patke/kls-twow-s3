@@ -1,7 +1,15 @@
-<div class = "lb <%- right ? "right" : ""%> ">
-    <ul class = "lblist">
-        <% for(let elem of leaderboard) { %>
-            <li class = "lblistitem"><%- elem %></li>
-        <% } %>
-    </ul>
+<div class = "lb<%- right ? "right" : ""  %>">
+    <h3><%- right ? "Competition" : "Last Round"  %></h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Score</th>
+        </tr>
+        <% for(let elem of Object.entries(leaderboard).sort((a, b) => b[1] - a[1])){ %>
+            <tr>
+                <td><%- elem[0] %></td>
+                <td><%- elem[1] %></td>
+            </tr>
+        <% } %> 
+    </table>
 </div>

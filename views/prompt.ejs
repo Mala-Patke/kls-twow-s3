@@ -2,7 +2,7 @@
     <head>
         <style>
             #input {
-                width:50%;
+                width:70%;
                 font-size: larger;
             }
 
@@ -19,9 +19,18 @@
                 background-color: lightgreen;
             }
 
-            .main {
+            .flex {
                 text-align: center;
                 font-family: sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 100%;
+                margin: 0px 30px;
+            }
+
+            .main {
+                width: 90%;
             }
 
             h1 {
@@ -29,20 +38,24 @@
             }
         </style>
         <link rel="stylesheet" type="text/css" href="css/navbar.css">
+        <link rel="stylesheet" type="text/css" href="css/leaderboard.css">
         <%- include('./assets/header.ejs') %> 
     </head>
 
     <body>
         <%- include('./assets/navbar.ejs') %>
-        <div class = "main" style="top:25%">
-            <h2>Response time!</h2>
-            <h3>In 10 words, give your best answer to the following prompt:</h3>
-            <h1><%- prompt %></h1>
-            <input id="input"><br>
-            <button id="submit">Submit</button><br>
-            <span id = "subreq"></span>
+        <div class = "flex">
+            <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.lr, right:false }) %>
+            <div class = "main">
+                <h2>Response time!</h2>
+                <h3>In 10 words, give your best answer to the following prompt:</h3>
+                <h1><%- prompt %></h1>
+                <input id="input"><br>
+                <button id="submit">Submit</button><br>
+                <span id = "subreq"></span>
+            </div>
+            <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.comp, right:true }) %>
         </div>
-
         <script>
             window.onload = () => {
                 if("<%-user.isOut%>" === "true"){

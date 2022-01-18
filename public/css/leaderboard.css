@@ -1,3 +1,18 @@
 .right {
     justify-self:flex-end;
 }
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}

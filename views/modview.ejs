@@ -16,8 +16,22 @@
             <option value="No">No</option>
         </select><br>
         Responses Per Screen:<input id = "screen" value ="<%- config.resp_per_screen %>"><br>
-        Random Seed: <input id = "seed" value="<%- config.seed %>">(CHANGE AFTER EVERY ROUND)<br>
-
+        Top 10 of last week:<br>
+        <div id = "lr">
+            <% for(let i = 1; i <= 10; i++) { %>
+                <input id = "lrn<%-i%>"  value = "<%-Object.entries(config.leaderboard.lr)[i-1][0]%>">
+                <input id = "lrs<%-i%>"  value = "<%-Object.entries(config.leaderboard.lr)[i-1][1]%>">
+                <br>
+            <% } %>
+        </div>
+        Top 10 of all time:<br>
+        <div id = "comp">
+            <% for(let i = 1; i <= 10; i++) { %>
+                <input id = "compn<%-i%>" value = "<%-Object.entries(config.leaderboard.comp)[i-1][0]%>">
+                <input id = "comps<%-i%>" value = "<%-Object.entries(config.leaderboard.comp)[i-1][1]%>">
+                <br>
+            <% } %>       
+        </div>
         <button id = "submit">Submit Changes</button>
     </body> 
 
@@ -27,7 +41,22 @@
                 .find(e => e.value === '<%-config.mode%>')
                 .setAttribute('selected', '');
         }
+
         document.getElementById('submit').addEventListener('click', () => {
+            let lbobj = {
+                lr:{},
+                comp:{}
+            };
+            for(let i = 1; i <= 10; i++){
+                Object.defineProperty(lbobj.lr, document.getElementById(`lrn${i}`).value, {
+                    value: document.getElementById(`lrs${i}`).value,
+                    enumerable: true
+                });
+                Object.defineProperty(lbobj.comp, document.getElementById(`compn${i}`).value, {
+                    value: document.getElementById(`comps${i}`).value,
+                    enumerable: true
+                });
+            }
             fetch('/api/updateconfig', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -36,7 +65,7 @@
                     'prompt': document.getElementById('prompt').value,
                     'resp_per_screen': document.getElementById('screen').value,
                     'allowingNewUsers': document.getElementById('ANU').value === "Yes",
-                    'seed': document.getElementById('seed').value
+                    'leaderboard': lbobj
                 }),
                 headers: {
                     'Content-Type':'text/plain'

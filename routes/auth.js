@@ -3,7 +3,7 @@ const { OAuth2Client } = require('google-auth-library');
 const User = require('../structures/user');
 
 const router = express.Router();
-const client = new OAuth2Client('227209584109-ut44j08p0m1mrr70k0d6jhp3nus7rgc6.apps.googleusercontent.com');
+const client = new OAuth2Client('227209584109-f54odnr6tn70muiu4fdqqrfbsbanm6cf.apps.googleusercontent.com');
 
 const rename = {
     "Katarina":"Ainsel",
@@ -16,7 +16,7 @@ function verifyToken(idToken){
     return new Promise((res, rej) => {
         client.verifyIdToken({
             idToken,
-            audience: '227209584109-ut44j08p0m1mrr70k0d6jhp3nus7rgc6.apps.googleusercontent.com'
+            audience: '227209584109-f54odnr6tn70muiu4fdqqrfbsbanm6cf.apps.googleusercontent.com'
         }).then(e => {
             res(e.getPayload());
         }).catch(rej);

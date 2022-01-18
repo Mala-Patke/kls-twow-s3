@@ -27,6 +27,16 @@
                 text-align: left;
             }
 
+            .flex {
+                text-align: center;
+                font-family: sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 100%;
+                margin: 0px 30px;
+            }
+
             #votewrapper {
                 text-align: center;
                 font-size: 0;
@@ -70,30 +80,37 @@
         </style>
         <%- include('./assets/header.ejs') %> 
         <link rel="stylesheet" type="text/css" href="css/navbar.css">
+        <link rel="stylesheet" type="text/css" href="css/leaderboard.css">
     </head>
     <body>
         <%- include('./assets/navbar.ejs') %>
-        <div id = "info">
-            <h2>Voting time!</h2>
-            <h3>Vote on your favorite responses to the prompt:</h3>
-            <h1><%-prompt%></h1>
-            <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom)..</h3>
-        </div>
-        <div id = "votewrapper">
-        <% for(let table of tables) { %>
-            <ul class = "kernel">
-                <div class = "border">
-                    <% for(let resp of table) { %>
-                        <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %> (<%- resp[1].split(" ").length %>)</li>
-                    <% } %> 
-                </div>
-            </ul>
-        <% } %>
-        <br>
-        </div>
-        <div id = "submitwrapper">
-            <button id = "submit" onclick="onSubmit()">Submit Votes</button>
-            <span id = "subreq"></span>
+        <div class = "flex">
+            <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.lr, right:false }) %>
+            <div class = "main">
+            <div id = "info">
+                <h2>Voting time!</h2>
+                <h3>Vote on your favorite responses to the prompt:</h3>
+                <h1><%-prompt%></h1>
+                <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom).</h3>
+            </div>
+            <div id = "votewrapper">
+                <% for(let table of tables) { %>
+                    <ul class = "kernel">
+                        <div class = "border">
+                            <% for(let resp of table) { %>
+                                <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %> (<%- resp[1].split(" ").length %>)</li>
+                            <% } %> 
+                        </div>
+                    </ul>
+                <% } %>
+                <br>
+            </div>
+            <div id = "submitwrapper">
+                <button id = "submit" onclick="onSubmit()">Submit Votes</button>
+                <span id = "subreq"></span>
+            </div>
+            </div>
+            <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.comp, right:true }) %>
         </div>
         <script>
             $(() => {
