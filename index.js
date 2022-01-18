@@ -11,8 +11,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.disable('x-powered-by'); 
 
-function handleError(e) {
-    log(`Hey <@674140360079048714>, there's a fatal error with TWOW: \`${e}.\``);
+function handleError(e, o) {
+    log(`Hey <@674140360079048714>, there's an ${o} with TWOW: \`${e}.\` Check the heroku logs for a stacktrace.`);
 }
 
 process.on('unhandledRejection', handleError);
@@ -23,7 +23,7 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
-a
+
 app.use(async (req, res, next) => {
     try{
         //This is very inneficient. I do not like this
