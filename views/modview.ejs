@@ -20,8 +20,8 @@
         <div id = "lr">
             <% for(let i = 1; i <= 10; i++) { %>
                 <% let entry = Object.entries(config.leaderboard.comp) %>
-                <input id = "lrn<%-i%>"  value = "<%-entry ? entry[i-1][0] : ""%>">
-                <input id = "lrs<%-i%>"  value = "<%-entry ? entry[i-1][0] : ""%>">
+                <input id = "lrn<%-i%>"  value = "<%-entry[i-1] ? entry[i-1][0] : ""%>">
+                <input id = "lrs<%-i%>"  value = "<%-entry[i-1] ? entry[i-1][0] : ""%>">
                 <br>
             <% } %>
         </div>
@@ -29,8 +29,8 @@
         <div id = "comp">
             <% for(let i = 1; i <= 10; i++) { %>
                 <% let entry = Object.entries(config.leaderboard.comp) %>
-                <input id = "compn<%-i%>" value = "<%-entry ? entry[i-1][0] : ""%>">
-                <input id = "comps<%-i%>" value = "<%-entry ? entry[i-1][1] : ""%>">
+                <input id = "compn<%-i%>" value = "<%-entry[i-1] ? entry[i-1][0] : ""%>">
+                <input id = "comps<%-i%>" value = "<%-entry[i-1] ? entry[i-1][1] : ""%>">
                 <br>
             <% } %>       
         </div>
