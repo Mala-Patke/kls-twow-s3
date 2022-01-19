@@ -19,16 +19,18 @@
         Top 10 of last week:<br>
         <div id = "lr">
             <% for(let i = 1; i <= 10; i++) { %>
-                <input id = "lrn<%-i%>"  value = "<%-Object.entries(config.leaderboard.lr)[i-1][0]%>">
-                <input id = "lrs<%-i%>"  value = "<%-Object.entries(config.leaderboard.lr)[i-1][1]%>">
+                <% let entry = Object.entries(config.leaderboard.comp) %>
+                <input id = "lrn<%-i%>"  value = "<%-entry ? entry[i-1][0] : ""%>">
+                <input id = "lrs<%-i%>"  value = "<%-entry ? entry[i-1][0] : ""%>">
                 <br>
             <% } %>
         </div>
         Top 10 of all time:<br>
         <div id = "comp">
             <% for(let i = 1; i <= 10; i++) { %>
-                <input id = "compn<%-i%>" value = "<%-Object.entries(config.leaderboard.comp)[i-1][0]%>">
-                <input id = "comps<%-i%>" value = "<%-Object.entries(config.leaderboard.comp)[i-1][1]%>">
+                <% let entry = Object.entries(config.leaderboard.comp) %>
+                <input id = "compn<%-i%>" value = "<%-entry ? entry[i-1][0] : ""%>">
+                <input id = "comps<%-i%>" value = "<%-entry ? entry[i-1][1] : ""%>">
                 <br>
             <% } %>       
         </div>
