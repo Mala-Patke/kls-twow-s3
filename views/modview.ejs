@@ -50,14 +50,20 @@
                 comp:{}
             };
             for(let i = 1; i <= 10; i++){
-                Object.defineProperty(lbobj.lr, document.getElementById(`lrn${i}`).value, {
-                    value: document.getElementById(`lrs${i}`).value,
-                    enumerable: true
-                });
-                Object.defineProperty(lbobj.comp, document.getElementById(`compn${i}`).value, {
-                    value: document.getElementById(`comps${i}`).value,
-                    enumerable: true
-                });
+                let lrn = document.getElementById(`lrn${i}`).value;
+                if(lrn.trim().length) {
+                    Object.defineProperty(lbobj.lr, lrn, {
+                        value: lrn,
+                        enumerable: true
+                    });
+                }
+                let comp = document.getElementById(`comps${i}`).value;
+                if(comp.trim().length){ 
+                    Object.defineProperty(lbobj.comp, comp, {
+                        value: comp,
+                        enumerable: true
+                    });
+                }
             }
             fetch('/api/updateconfig', {
                 method: 'POST',
