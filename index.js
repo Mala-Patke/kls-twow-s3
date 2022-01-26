@@ -39,6 +39,18 @@ app.use(express.static(__dirname + '/public'));
 app.use('/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
+function isAuth(req, res, next){
+    if(req.config.mode === "maintenance") return res.sendFile(join(__dirname, 'public/maintenance.htm'));
+    if(!req.session.user) return res.redirect('/auth/main');
+    next();
+}
+
+function restricted(req, res, next){
+    if(!["Timothy Chien", "Ali Shahid"].includes(req.session.user.username)) return res.redirect('/');
+    if(req.params.page) req.config.mode = req.params.page;
+    next();
+}
+
 /**
  * Possible config modes
  * > Maintenance: Shows a "maintenance" screen. Does not require login
@@ -46,10 +58,7 @@ app.use('/api', require('./routes/api'));
  * > Respond: Prompt with input
  * > Vote: Voting UI
  */
-app.get('/', (req, res) => {
-    if(req.config.mode === "maintenance") return res.sendFile(join(__dirname, 'public/maintenance.htm'));
-    if(!req.session.user) return res.redirect('/auth/main');
-
+function main(req, res) {
     let swich = {
         "demo": () => {
             res.render('demo', { user: req.session.user });
@@ -66,13 +75,16 @@ app.get('/', (req, res) => {
         }
     }
     swich[req.config.mode]();
-});
 
-app.get('/config', async (req, res) => {
-    if(!req.session.user) return res.redirect('/auth/main');
-    if(!["Timothy Chien", "Ali Shahid"].includes(req.session.user.username)) return res.redirect('/');
+}
+
+app.get('/', isAuth, main);
+
+app.get('/config', isAuth, restricted, (req, res) => {
     res.render('modview', { config: req.config });    
 });
+
+app.get('/test/:page', isAuth, restricted, main);
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening on http://localhost:${process.env.PORT}`)
