@@ -37,8 +37,8 @@
                 padding-bottom: 50px;
             }
         </style>
-        <link rel="stylesheet" type="text/css" href="css/navbar.css">
-        <link rel="stylesheet" type="text/css" href="css/leaderboard.css">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+        <link rel="stylesheet" type="text/css" href="/css/leaderboard.css">
         <%- include('./assets/header.ejs') %> 
     </head>
 
@@ -54,6 +54,7 @@
                 <button id="submit">Submit</button><br>
                 <span id = "subreq"></span>
             </div>
+            
             <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.comp, right:true }) %>
         </div>
         <script>
