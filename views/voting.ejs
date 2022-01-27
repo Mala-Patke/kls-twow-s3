@@ -99,7 +99,7 @@
                     <ul class = "kernel">
                         <div class = "border">
                             <% for(let resp of table) { %>
-                                <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %> (<%- resp[1].split(" ").length %>)</li>
+                                <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %> (<%- resp[1].trim().split(" ").length %>)</li>
                             <% } %> 
                         </div>
                     </ul>
