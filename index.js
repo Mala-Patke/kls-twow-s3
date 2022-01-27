@@ -41,7 +41,6 @@ app.use('/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
 function auth(req, res, next){
-    if(req.config.mode === "maintenance") return res.sendFile(join(__dirname, 'public/maintenance.htm'));
     if(!req.session.user) return res.redirect('/auth/main');
     next();
 }
@@ -60,6 +59,8 @@ function restrict(req, res, next){
  * > Vote: Voting UI
  */
 function main(req, res) {
+    if(req.config.mode === "maintenance") return res.sendFile(join(__dirname, 'public/maintenance.htm'));
+
     let swich = {
         "demo": () => {
             res.render('demo', { user: req.session.user });
