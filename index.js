@@ -11,8 +11,9 @@ const app = express();
 app.set('view engine', 'ejs');
 app.disable('x-powered-by'); 
 
-function handleError(e, o) {
-    log(`Hey <@674140360079048714>, there's an ${o} with TWOW: \`${e}.\` Check the heroku logs for a stacktrace.`);
+function handleError(e) {
+    log(`Hey <@674140360079048714>, there's an error with TWOW: \`${e}.\` Check the logs for a stacktrace.`);
+    console.error(e);
 }
 
 process.on('unhandledRejection', handleError);
@@ -39,13 +40,13 @@ app.use(express.static(__dirname + '/public'));
 app.use('/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
-function isAuth(req, res, next){
+function auth(req, res, next){
     if(req.config.mode === "maintenance") return res.sendFile(join(__dirname, 'public/maintenance.htm'));
     if(!req.session.user) return res.redirect('/auth/main');
     next();
 }
 
-function restricted(req, res, next){
+function restrict(req, res, next){
     if(!["Timothy Chien", "Ali Shahid"].includes(req.session.user.username)) return res.redirect('/');
     if(req.params.page) req.config.mode = req.params.page;
     next();
@@ -53,7 +54,7 @@ function restricted(req, res, next){
 
 /**
  * Possible config modes
- * > Maintenance: Shows a "maintenance" screen. Does not require login
+ * > Maintenance: Shows a "maintenance" screen. Does not log in
  * > Demo: Demo phase. Shows a "Competition will begin shortly" screen
  * > Respond: Prompt with input
  * > Vote: Voting UI
@@ -78,13 +79,13 @@ function main(req, res) {
 
 }
 
-app.get('/', isAuth, main);
+app.get('/', auth, main);
 
-app.get('/config', isAuth, restricted, (req, res) => {
+app.get('/config', auth, restrict, (req, res) => {
     res.render('modview', { config: req.config });    
 });
 
-app.get('/test/:page', isAuth, restricted, main);
+app.get('/test/:page', auth, restrict, main);
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening on http://localhost:${process.env.PORT}`)
