@@ -6,14 +6,14 @@ const calculate = require('../lib/calculate');
 const router = express.Router();
 
 router.post('/respond', express.text(), async (req, res) => {
-    if(req.header("X-auth") !== req.session.user.id) return res.status(401).send("Stop that");
+    if(req.header("X-auth") !== req.session.user.id) return res.status(401).send("User mismatch error. Please refresh and try again.");
     if(req.config.mode !== "respond") return res.status(406).send("Hey, you can't access this resource right now!");
     db.handleInput(req.config.round, req.session.user.id, req.body);
     res.sendStatus(200);
 });
 
 router.post('/vote', express.text(), (req, res) => {
-    if(req.header("X-auth") !== req.session.user.id) return res.status(401).send("Stop that");
+    if(req.header("X-auth") !== req.session.user.id) return res.status(401).send("User mismatch error. Please refresh and try again.");
     if(req.config.mode !== "vote") return res.status(406).send("Hey, you can't access this resource right now!");
     db.handleVote(req.config.round, req.session.user.id, req.body);
     res.sendStatus(200);

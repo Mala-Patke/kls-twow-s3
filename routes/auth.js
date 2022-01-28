@@ -35,7 +35,8 @@ router.get('/callback', async (req, res) => {
     let firstname = req.query.user.split(" ")[0];
     if(Object.keys(rename).includes(firstname)) req.query.user = req.query.user.replace(firstname, rename[firstname]);
     
-    let userdata = await User.register(req.query.user, req.config.allowingNewUsers);
+    let userdata = await User.register(req.query.user, req.config.allowingNewUsers)
+        .catch(e => res.status(403).send(e));
     if(userdata.isBanned) return res.status(403).send("You have been banned. If you think this was a mistake, please contact us.");
     req.session.user = userdata;
 
