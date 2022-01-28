@@ -42,6 +42,11 @@
             Array.from(document.getElementById('mode').children)
                 .find(e => e.value === '<%-config.mode%>')
                 .setAttribute('selected', '');
+
+            Array.from(document.getElementById('ANU').children)
+                .find(e => e.value === ('<%-config.allowingNewUsers%>' === 'true' ? 'Yes' : 'No'))
+                .setAttribute('selected', '');
+
         }
 
         document.getElementById('submit').addEventListener('click', () => {
