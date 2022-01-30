@@ -59,12 +59,16 @@
         </div>
         <script>
             window.onload = () => {
+                let inp = document.getElementById('input');
+
                 if("<%-user.isOut%>" === "true"){
-                    let inp = document.getElementById('input');
                     inp.setAttribute('placeholder', "Sorry, you've been eliminated. You can't respond this round")
                     inp.setAttribute('disabled', '');
                     document.getElementById('submit').setAttribute('disabled', '');
                 }
+
+                let prevResp = localStorage.getItem('<%-round%>');
+                if(prevResp) inp.value = prevResp;
             }
 
             document.getElementById('input').addEventListener('keydown', e => {
@@ -82,6 +86,7 @@
                         "X-auth": '<%-user.id%>'
                     }
                 }).then(() => {
+                    localStorage.setItem('<%-round%>', sub);
                     document.getElementById('subreq').innerText = "Response submitted! Refresh the page if you'd like to resubmit your response.";
                 }).catch(e => {
                     document.getElementById('subreq').innerText = "ERROR: " + e;

@@ -66,7 +66,7 @@ function main(req, res) {
             res.render('demo', { user: req.session.user });
         },
         "respond": () => {
-            res.render('prompt', { prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
+            res.render('prompt', { round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
         },
         "vote": () => {
             db.getResponses(req.config.round)
