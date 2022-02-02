@@ -19,7 +19,7 @@
         Top 10 of last week:<br>
         <div id = "lr">
             <% for(let i = 1; i <= 10; i++) { %>
-                <% let entry = Object.entries(config.leaderboard.comp) %>
+                <% let entry = Object.entries(config.leaderboard.lr) %>
                 <input id = "lrn<%-i%>"  value = "<%-entry[i-1] ? entry[i-1][0] : ""%>">
                 <input id = "lrs<%-i%>"  value = "<%-entry[i-1] ? entry[i-1][0] : ""%>">
                 <br>
