@@ -72,12 +72,11 @@ function main(req, res) {
             db.getResponses(req.config.round)
             .then(resps => {
                 let tables = createVotingTables(resps, req.config.round, req.session.user.id, req.config.resp_per_screen);
-                res.render('voting', { tables, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
+                res.render('voting', { tables, round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
             });
         }
     }
     swich[req.config.mode]();
-
 }
 
 app.get('/', auth, main);

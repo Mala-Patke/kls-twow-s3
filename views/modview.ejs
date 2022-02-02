@@ -55,17 +55,20 @@
                 comp:{}
             };
             for(let i = 1; i <= 10; i++){
-                let lrn = document.getElementById(`lrn${i}`).value;
-                if(lrn.trim().length) {
+                let lrn = document.getElementById(`lrn${i}`).value.trim();
+                let lrs = document.getElementById(`lrs${i}`).value.trim();
+                if(lrn.length) {
                     Object.defineProperty(lbobj.lr, lrn, {
-                        value: lrn,
+                        value: lrs,
                         enumerable: true
                     });
                 }
-                let comp = document.getElementById(`comps${i}`).value;
-                if(comp.trim().length){ 
-                    Object.defineProperty(lbobj.comp, comp, {
-                        value: comp,
+
+                let compn = document.getElementById(`compn${i}`).value;
+                let comps = document.getElementById(`comps${i}`).value;
+                if(compn.length){ 
+                    Object.defineProperty(lbobj.comp, compn, {
+                        value: comps,
                         enumerable: true
                     });
                 }

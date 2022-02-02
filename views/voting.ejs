@@ -92,7 +92,7 @@
                 <h2>Voting time!</h2>
                 <h3>Vote on your favorite responses to the prompt:</h3>
                 <h1><%-prompt%></h1>
-                <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom). Hit the "Submit Votes" button at the botton</h3>
+                <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom). Hit the "Submit Votes" button at the bottom when you're done.</h3>
             </div>
             <div id = "votewrapper">
                 <% for(let table of tables) { %>
@@ -136,6 +136,31 @@
                     newelem.appendChild(textNode);
                     elem.appendChild(newelem.cloneNode(true));
                 }
+
+                let votes = localStorage.getItem('<%-round%>_VOTE');
+                if(votes){
+                    let voteState = votes
+                        .split(" ")
+                        .map(e => e.split(","));
+                    let screens = Array.from(document.getElementsByClassName('border'));
+
+                    for(let i = 0; i <= screens.length; i++){
+                        let vote = voteState[i];
+                        let screen = screens[i];
+                        console.log(screens);
+                        let ret = vote.map(e => Array.from(screen.children).find(a => a.attributes.getNamedItem("rid").value === e))
+                        for(let i = 0; i < screen.children.length-1; i++){
+                            console.log(ret[i]);
+                            screen.removeChild(ret[i]);
+                            screen.appendChild(ret[i]);
+                            console.log(ret[i].textContent);
+                            /*screen.replaceChild(
+                                screen.querySelector(`[rid='${screen.children[i].attributes.getNamedItem("rid").value}']`),
+                                ret[i]
+                            );*/
+                        }
+                    }
+                }
             }
 
             document.getElementById('submit').onclick = () => {
@@ -155,6 +180,7 @@
                         "X-auth": '<%-user.id%>'
                     }
                 }).then(() => {
+                    localStorage.setItem('<%-round%>_VOTE', res);
                     document.getElementById('subreq').innerText = "Votes submitted! Refresh the page if you'd like to resubmit your vote.";
                 }).catch(e => {
                     document.getElementById('subreq').innerText = "ERROR: " + e; 

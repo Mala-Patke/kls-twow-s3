@@ -17,6 +17,9 @@ const commands = {
         console.log(
             Object.keys(data).includes(PBKDF2(args, process.env.SALT, { keySize: 2 }).toString())
         );
+    },
+    'list': (data) => {
+        console.log(data[args]);
     }
 }
 
