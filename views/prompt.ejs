@@ -33,6 +33,10 @@
                 width: 90%;
             }
 
+            .red {
+                text-decoration-color: red;
+            }
+
             h1 {
                 padding-bottom: 50px;
                 margin: 0 10%;
@@ -93,10 +97,12 @@
                         "Content-Type": "text/plain",
                         "X-auth": '<%-user.id%>'
                     }
-                }).then(() => {
+                }).then(res => {
+                    if(!res.ok) throw new Error(res.statusText);
                     localStorage.setItem('<%-round%>_PROMPT', sub);
                     document.getElementById('subreq').innerText = "Response submitted! Refresh the page if you'd like to resubmit your response.";
                 }).catch(e => {
+                    document.getElementById('subreq').classList.add('red');
                     document.getElementById('subreq').innerText = "ERROR: " + e;
                 });
             });

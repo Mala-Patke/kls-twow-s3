@@ -179,10 +179,12 @@
                         "Content-Type": "text/plain",
                         "X-auth": '<%-user.id%>'
                     }
-                }).then(() => {
+                }).then(res => {
+                    if(!res.ok) throw new Error(res.statusText);
                     localStorage.setItem('<%-round%>_VOTE', res);
                     document.getElementById('subreq').innerText = "Votes submitted! Refresh the page if you'd like to resubmit your vote.";
                 }).catch(e => {
+                    document.getElementById('subreq').classList.add('red');
                     document.getElementById('subreq').innerText = "ERROR: " + e; 
                 });
             }
