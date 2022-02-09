@@ -29,9 +29,11 @@ router.post('/updateconfig', express.text(), async (req, res) => {
 });
 
 router.get('/rounddata', async (req, res) => {
-    if(!req.query.round) return res.sendStatus(400);
+    if(!req.query.round) req.query.round = req.config.round;
     let votes = await db.getVotes(req.query.round);
-    res.send(calculate(votes)); 
+    let users = await db.getUsers();
+    let responses = await db.getResponses(req.query.round);
+    res.send(calculate(votes, users, responses).replace(/<<>>/gi, '<br>')); 
 })
 
 module.exports = router; 
