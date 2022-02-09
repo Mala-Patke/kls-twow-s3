@@ -78,6 +78,10 @@
                 background-color: lightskyblue;
                 border-width: 1px 1px 1px 1px;
             }
+
+            .red {
+                text-decoration: red;
+            }
         </style>
         <%- include('./assets/header.ejs') %> 
         <link rel="stylesheet" type="text/css" href="/css/navbar.css">
@@ -172,7 +176,8 @@
                         .map(e => e.attributes.getNamedItem('rid').value)
                         .join(',') + " ";
                 }
-                fetch('/api/vote', { 
+                let usp = new URLSearchParams({user: '<%-user.username%>'});
+                fetch(`/api/vote?${usp}`, { 
                     method: 'POST',
                     body: res,
                     headers: {

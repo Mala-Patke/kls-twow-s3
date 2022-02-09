@@ -90,7 +90,8 @@
             document.getElementById('submit').addEventListener('click', e => {
                 document.getElementById('submit').setAttribute('disabled', '');
                 let sub = document.getElementById('input').value;
-                fetch('/api/respond', {
+                let usp = new URLSearchParams({user: '<%-user.username%>'});
+                fetch(`/api/respond?${usp}`, {
                     method: 'POST',
                     body: sub,
                     headers: {
