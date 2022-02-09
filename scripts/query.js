@@ -9,17 +9,32 @@ const args = process.argv.slice(4).join(" ").trim();
 //  0    1       2      3     4
 //node query <command> <db> (user)
 
+const hash = e => PBKDF2(e, process.env.SALT, { keySize: 2 }).toString();
+
 const commands = {
     'count': (data) => {
         console.log(Object.keys(data).length);
     },
     'has': (data) => {
         console.log(
-            Object.keys(data).includes(PBKDF2(args, process.env.SALT, { keySize: 2 }).toString())
+            Object.keys(data).includes(hash(args))
         );
     },
     'list': (data) => {
-        console.log(data[args]);
+        console.log(Object.values(data));
+    },
+    'list_users': (data) => {
+        dbrefs.users.then(users => {
+            console.log(
+                Object.entries(users)
+                    .filter(e => args === "not" ? !data[e[0]] : data[e[0]])
+                    .map(e => e[1].username)
+                    .sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0))
+            );
+        });
+    },
+    'get': (data) => {
+        console.log(data[hash(args)]);
     }
 }
 
