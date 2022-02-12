@@ -33,7 +33,7 @@ router.get('/rounddata', async (req, res) => {
     let votes = await db.getVotes(req.query.round);
     let users = await db.getUsers();
     let responses = await db.getResponses(req.query.round);
-    res.send(calculate(votes, users, responses).replace(/<<>>/gi, '<br>')); 
+    res.send(calculate(votes, users, responses).replace(/\n/gi, '<br>')); 
 })
 
 module.exports = router; 
