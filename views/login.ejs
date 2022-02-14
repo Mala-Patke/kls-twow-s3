@@ -11,7 +11,17 @@
                     email: profile.getEmail(),
                     id
                 });
-                window.location.href = `/auth/callback?${params.toString()}`;
+                fetch('/auth/callback', {
+                    method: "POST",
+                    body: params,
+                    headers:{
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Content-Length": params.toString().length
+                    }
+                }).then(res => {
+                        if(!res.ok) console.log(res.statusText);
+                        else window.location.href = "/";
+                }).catch(console.error)
             }
         </script>
     </head>

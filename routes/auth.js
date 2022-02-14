@@ -27,15 +27,17 @@ router.get('/main', (req, res) => {
     res.render('login');
 });
 
-router.get('/callback', async (req, res) => {
-    let verify = await verifyToken(req.query.id).catch(res.status(403).send);
-    if(verify.email !== req.query.email) return res.sendStatus(400);
-    if(!req.query.email.endsWith('khanlabschool.org')) return res.status(403).send("Error: You must log in with your Khan Lab School email. Please go back to https://klstwow.herokuapp.com/ and try again.");
+router.get('/callback', (req, res) => res.redirect("/"));
 
-    let firstname = req.query.user.split(" ")[0];
-    if(Object.keys(rename).includes(firstname)) req.query.user = req.query.user.replace(firstname, rename[firstname]);
+router.post('/callback', express.urlencoded(), async (req, res) => {
+    let verify = await verifyToken(req.body.id).catch(res.status(403).send);
+    if(verify.email !== req.body.email) return res.sendStatus(400);
+    if(!req.body.email.endsWith('khanlabschool.org')) return res.status(403).send("Error: You must log in with your Khan Lab School email. Please go back to https://klstwow.herokuapp.com/ and try again.");
+
+    let firstname = req.body.user.split(" ")[0];
+    if(Object.keys(rename).includes(firstname)) req.body.user = req.body.user.replace(firstname, rename[firstname]);
     
-    let userdata = await User.register(req.query.user, req.config.allowingNewUsers)
+    let userdata = await User.register(req.body.user, req.config.allowingNewUsers)
         .catch(e => res.status(403).send(e));
     if(userdata.isBanned) return res.status(403).send("You have been banned. If you think this was a mistake, please contact us.");
     req.session.user = userdata;
