@@ -80,10 +80,10 @@
                 }
             }
 
-            document.getElementById('input').addEventListener('keydown', e => {
+            document.getElementById('input').addEventListener('keyup', e => {
                 if(e.currentTarget.value.split(/\s+/).length > 15 && e.keyCode !== 8) e.preventDefault();
                 else {
-                    document.getElementById('wc').innerText = e.currentTarget.value.split(/\s+/).length.toString();
+                    document.getElementById('wc').innerText = e.currentTarget.value.trim().split(/\s+/).filter(e => e.length).length.toString();
                 }
             });
 
