@@ -43,7 +43,7 @@ router.post('/callback', express.urlencoded(), async (req, res) => {
     req.session.user = userdata;
 
     //console.log(userdata, req.session.user)
-    res.redirect('/');
+    //res.redirect('/');
 });
 
 module.exports = router;
