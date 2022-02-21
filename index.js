@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 const { join } = require('path');
+const RedisClient = require('./database/redis-init');
 const db = require('./database/dbwrapper');
 const createVotingTables = require('./lib/tables');
 const User = require('./lib/user');
@@ -15,12 +17,15 @@ app.disable('x-powered-by');
 function handleError(e) {
     dlog(`Hey <@674140360079048714>, there's an error with TWOW: \`${e}.\` Check the logs for a stacktrace.`);
     console.error(e);
+    console.timeLog();
 }
 
 process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
+console.time('errorTimer')
 
 app.use(session({
+    store: new RedisStore({ client: RedisClient }),
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false
