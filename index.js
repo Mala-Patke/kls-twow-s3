@@ -4,7 +4,8 @@ const { join } = require('path');
 const db = require('./database/dbwrapper');
 const createVotingTables = require('./lib/tables');
 const User = require('./lib/user');
-const log = require('./lib/webhooklogger');
+const dlog = require('./lib/webhooklogger');
+const clog = require('./lib/morgan-init');
 require('dotenv').config();
 
 const app = express();
@@ -12,7 +13,7 @@ app.set('view engine', 'ejs');
 app.disable('x-powered-by'); 
 
 function handleError(e) {
-    log(`Hey <@674140360079048714>, there's an error with TWOW: \`${e}.\` Check the logs for a stacktrace.`);
+    dlog(`Hey <@674140360079048714>, there's an error with TWOW: \`${e}.\` Check the logs for a stacktrace.`);
     console.error(e);
 }
 
@@ -25,9 +26,10 @@ app.use(session({
     saveUninitialized: false
 }));
 
+app.use(clog);
+
 app.use(async (req, res, next) => {
     try{
-        //This is very inneficient. I do not like this
         req.config = await db.getConfig();
     } catch (e){
         next(e)
