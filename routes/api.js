@@ -64,7 +64,7 @@ router.get('/emails', (req, res) => {
         emails.push(ret.toLowerCase());
     }
     res.send(emails);*/
-    res.send(['vibhass@khanlabschool.org', ]);
+    res.send(['dianas@khanlabschool.org', 'nihalv@khanlabschool.org']);
 });
 
 module.exports = router; 
