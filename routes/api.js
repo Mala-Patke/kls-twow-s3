@@ -42,12 +42,11 @@ router.get('/rounddata', async (req, res) => {
 
 //Doing this horribleness all to avoid having to store emails in the database
 const exemptions = [
-    "Derek", "Brandon", "Brianna", "Jessica", "Chi-Ray", "Chris", "Lejoi"
+    "Derek Vanderpool", "Brandon Lee", "Brianna Beehler", "Jessica Peters", "Chi-Ray Chien", "Chris Lippi", "Lejoi Reese"
 ];
 
 router.get('/emails', (req, res) => {
     if(!req.query.code || AES.decrypt(req.query.code, process.env.SALT).toString(Utf8) !== "artichoke") return res.sendStatus(403);
-    /*
     //This is super dumb but I'm too lazy to implement it properly lmao
     let rawusers = execSync(`node query list_users ${req.query.ref} not`, { cwd: join(__dirname, "../scripts")})
         .toString()
@@ -63,7 +62,7 @@ router.get('/emails', (req, res) => {
         ret += "@khanlabschool.org";
         emails.push(ret.toLowerCase());
     }
-    res.send(emails);*/
+    res.send(emails);
     res.send(['dianas@khanlabschool.org', 'nihalv@khanlabschool.org']);
 });
 
