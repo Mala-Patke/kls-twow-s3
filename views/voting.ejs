@@ -2,172 +2,98 @@
     <head>
         <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
         <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-        <style>
-            .kernel {
-                display: inline-block;
-                list-style-type: none;
-                vertical-align: top;
-                font-size: large;
-            }
-
-            .border {
-                border: 1px solid black;
-                padding: 4px;
-                border-radius: 5px;
-            }
-
-            .item {
-                display: block;
-                border: 1px solid black;
-                border-radius: 5px;
-                background-color: rgb(216, 216, 216);
-                padding: 2px 10px;
-                margin-top: 1px;
-                margin-bottom: 1px;
-                text-align: left;
-            }
-
-            .flex {
-                text-align: center;
-                font-family: sans-serif;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 100%;
-                margin: 0px 30px;
-                flex-wrap: wrap;
-            }
-
-            #votewrapper {
-                text-align: center;
-                font-size: 0;
-                margin:auto;
-                font-family: Helvetica, sans-serif;
-            }
-
-            #info {
-                text-align: center;
-            }
-
-            #submitwrapper {
-                display: flex;
-                flex-direction: column;
-                align-items: center; 
-            }
-
-            #submit {
-                margin-top: 10px;
-                padding: 5px 20px;
-                border-radius: 10px;
-                border: none;
-                background-color: lightskyblue;
-            }
-
-            #submit:hover {
-                cursor: pointer;
-                background-color: lightgreen;
-            }
-
-            .hidden {
-                visibility: hidden;
-            }
-
-            .placeholder {
-                height: 1.5em; 
-                line-height: 1.2em;
-                background-color: lightskyblue;
-                border-width: 1px 1px 1px 1px;
-            }
-
-            .red {
-                text-decoration: red;
-            }
-        </style>
-        <%- include('./assets/header.ejs') %> 
+        <%- include('./assets/header.ejs') %>
         <link rel="stylesheet" type="text/css" href="/css/navbar.css">
         <link rel="stylesheet" type="text/css" href="/css/leaderboard.css">
+        <link rel="stylesheet" type="text/css" href="/css/voting.css">
     </head>
     <body>
         <%- include('./assets/navbar.ejs') %>
-        <div class = "flex">
-            <%#- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.lr, right:false }) %>
-            <div class = "main">
-            <div id = "info">
-                <h2>Voting time!</h2>
-                <h3>Vote on your favorite responses to the prompt:</h3>
-                <h1><%-prompt%></h1>
-                <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom). Hit the "Submit Votes" button at the bottom when you're done.</h3>
+        <div class="flex">
+            <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.lr, right:false }) %>
+            <div class="main">
+                <div id="info">
+                    <h2>Voting time!</h2>
+                    <h3>Vote on your favorite responses to the prompt:</h3>
+                    <h1><%-prompt%></h1>
+                    <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom). Hit the "Submit Votes" button at the bottom when you're done.</h3>
+                </div>
+                <div id="votewrapper">
+                    <div class = "menu">
+                        
+                    </div>
+                </div>
             </div>
-            <div id = "votewrapper">
-                <% for(let table of tables) { %>
-                    <ul class = "kernel">
-                        <div class = "border">
-                            <% for(let resp of table) { %>
-                                <li rid = "<%- resp[0] %>" class = "item"><%- resp[1] %> (<%- resp[1].trim().split(" ").length %>)</li>
-                            <% } %> 
-                        </div>
-                    </ul>
-                <% } %>
-                <br>
-            </div>
-            <div id = "submitwrapper">
-                <button id = "submit" onclick="onSubmit()">Submit Votes</button>
-                <span id = "subreq"></span>
-            </div>
-            </div>
-            <%#- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.comp, right:true }) %>
+            <%- include('./assets/leaderboard.ejs', { leaderboard: leaderboard.comp, right:true }) %>
         </div>
+        
         <script>
-            $(() => {
-               $('.kernel').sortable({
-                   placeholder: 'placeholder',
-                   tolerance: 'pointer',
-                   items: 'li:not(.hidden)'
-               }); 
+            $(document).ready(() => {
+                let tableData = JSON.parse(`<%-tables%>`);
 
-               $('.kernel').disableSelection();
+                //Create menu
+                let menuItems = [];
+                let menuButton = $("<button></button>")
+                    .addClass("menuSelect")
+                    .click((e) => {
+
+                    });
+                menuItems.push(menuButton.clone(true).append($("<div></div>").addClass("trileft")));
+                for(let i = 1; i <= tableData.length; i++) menuItems.push(menuButton.clone(true).text(i));
+                menuItems.push(menuButton.clone(true).append($("<div></div>").addClass("triright")));
+
+                $(".menu").append(...menuItems);
+
+                //Create submit button and wrapper
+                let button = $("<button></button>")
+                    .attr("id", "submit")
+                    .click(submit)
+                    .text("Submit Votes");
+
+                let subreq = $("<span></span>")
+                    .attr('id', 'subreq');
+
+                let submitWrapper = $("<div></div>")
+                    .attr('id', 'submitwrapper')
+                    .append(button, subreq);
+
+                //Create voting tables and elements
+                let tables = [];
+                for(let table of tableData){
+                    let list = $("<div></div>").addClass('border');
+                    for(let resp of table){
+                        list.append(
+                            $("<li></li>")
+                                .attr("rid", resp[0])
+                                .text(`${resp[1]} (${resp[1].trim().split(/ +/).length})`)
+                                .addClass('item')
+                        );
+                    }
+
+                    let largestInChild = $(
+                        list.children().toArray()
+                            .reduce((p, c) => c.textContent.length > p.textContent.length ? c : p)
+                    );
+                    let sizer = $('<li></li>')
+                        .text(largestInChild.text() + "le")
+                        .addClass('item hidden');
+
+                    tables.push(
+                        $("<ul></ul>")
+                            .addClass('kernel')
+                            .append(list, sizer)
+                            .sortable({
+                               placeholder: 'placeholder',
+                               tolerance: 'pointer',
+                               items: 'li:not(.hidden)'
+                            }).disableSelection()
+                    );
+                }
+
+                $('#votewrapper').append(tables[0], submitWrapper);
             });
 
-            window.onload = () => {
-                for(let elem of document.getElementsByTagName('ul')){
-                    let largestInChild = Array.from(elem.children[0].children)
-                        .reduce((p, c) => c.textContent.length > p.textContent.length ? c : p);
-
-                    let newelem = document.createElement('li');
-                    let textNode = document.createTextNode(largestInChild.textContent + "le");
-
-                    newelem.classList.add('item', 'hidden');
-                    newelem.appendChild(textNode);
-                    elem.appendChild(newelem.cloneNode(true));
-                }
-
-                let votes = localStorage.getItem('<%-round%>_VOTE');
-                if(votes){
-                    let voteState = votes
-                        .split(" ")
-                        .map(e => e.split(","));
-                    let screens = Array.from(document.getElementsByClassName('border'));
-
-                    for(let i = 0; i <= screens.length; i++){
-                        let vote = voteState[i];
-                        let screen = screens[i];
-                        console.log(screens);
-                        let ret = vote.map(e => Array.from(screen.children).find(a => a.attributes.getNamedItem("rid").value === e))
-                        for(let i = 0; i < screen.children.length-1; i++){
-                            console.log(ret[i]);
-                            screen.removeChild(ret[i]);
-                            screen.appendChild(ret[i]);
-                            console.log(ret[i].textContent);
-                            /*screen.replaceChild(
-                                screen.querySelector(`[rid='${screen.children[i].attributes.getNamedItem("rid").value}']`),
-                                ret[i]
-                            );*/
-                        }
-                    }
-                }
-            }
-
-            document.getElementById('submit').onclick = () => {
+            function submit() {
                 document.getElementById('submit').setAttribute('disabled', '');
                 let res = "";
                 for(let elem of document.getElementsByClassName('border')){

@@ -78,7 +78,9 @@ function main(req, res) {
         "vote": () => {
             db.getResponses(req.config.round)
             .then(resps => {
-                let tables = createVotingTables(resps, req.config.round, req.session.user.id, req.config.resp_per_screen);
+                let tables = JSON.stringify(  
+                    createVotingTables(resps, req.config.round, req.session.user.id, req.config.resp_per_screen)
+                ).replace(/\\/g, "\\\\\\"); //to help the JSON.parse on the other side
                 res.render('voting', { tables, round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
             });
         }
