@@ -23,7 +23,7 @@ router.post('/vote', express.text(), async (req, res) => {
     let userVote = req.body.split(",");
     /**@type {string}*/
     let lastVote = await db.getVotes(req.config.round);
-    if(lastVote){
+    if(lastVote && lastVote[req.session.user.id]){
         let dbvote = lastVote[req.session.user.id].split(" ").map(e => e.split(","));
         let votePosition = dbvote.findIndex(e => e.includes(userVote[0]));
         if(votePosition !== -1) {
