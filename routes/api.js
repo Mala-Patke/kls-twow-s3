@@ -16,9 +16,22 @@ router.post('/respond', express.text(), async (req, res) => {
     res.sendStatus(200);
 });
 
-router.post('/vote', express.text(), (req, res) => {
+router.post('/vote', express.text(), async (req, res) => {
     if(req.header("X-auth") !== req.session.user.id) return res.status(401).send("User mismatch error. Please refresh and try again.");
-    if(req.config.mode !== "vote") return res.status(406).send("Hey, you can't access this resource right now!");
+    //if(req.config.mode !== "vote") return res.status(406).send("Hey, you can't access this resource right now!");
+    
+    let userVote = req.body.split(",");
+    /**@type {string}*/
+    let lastVote = await db.getVotes(req.config.round);
+    if(lastVote){
+        let dbvote = lastVote[req.session.user.id].split(" ").map(e => e.split(","));
+        let votePosition = dbvote.findIndex(e => e.includes(userVote[0]));
+        if(votePosition !== -1) {
+            dbvote[votePosition] = userVote;
+        } else dbvote.push(userVote);
+        req.body = dbvote.map(e => e.join(",")).join(" ");
+    }
+
     db.handleVote(req.config.round, req.session.user.id, req.body);
     res.sendStatus(200);
 });
@@ -53,7 +66,7 @@ router.get('/emails', (req, res) => {
         .replace(/'/g, '"')
         .replace(/[^a-z"\[\], ]/gi, '');
     let users = JSON.parse(rawusers);
-    console.log(users);
+
     let emails = [];
     for(let user of users){
         let ret = "";
@@ -63,7 +76,6 @@ router.get('/emails', (req, res) => {
         emails.push(ret.toLowerCase());
     }
     res.send(emails);
-    res.send(['dianas@khanlabschool.org', 'nihalv@khanlabschool.org']);
 });
 
 module.exports = router; 

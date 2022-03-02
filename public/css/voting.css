@@ -1,3 +1,7 @@
+.main {
+    width: 75%;
+}
+
 .kernel {
     display: inline-block;
     list-style-type: none;
@@ -61,6 +65,16 @@
     font-weight: bold;
     background: transparent;
     border: transparent;
+    border-radius: 5px;
+}
+
+.menuSelect:hover {
+    cursor: pointer;
+    background-color: lightskyblue;
+}
+
+.inline {
+    display: inline-block;
 }
 
 .trileft {
@@ -103,4 +117,8 @@
 
 .red {
     text-decoration: red;
+}
+
+.bgreen {
+    background-color: lightgreen
 }

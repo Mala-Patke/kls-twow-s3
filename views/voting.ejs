@@ -18,9 +18,12 @@
                     <h1><%-prompt%></h1>
                     <h3>Within each table, drag and drop to order the response boxes from most favorite (at the top) to least favorite (at the bottom). Hit the "Submit Votes" button at the bottom when you're done.</h3>
                 </div>
+                <div class = "menu"></div>
                 <div id="votewrapper">
-                    <div class = "menu">
-                        
+                    <div class = "inline">
+                        <!--button class = "arrow">&lt;</button-->
+                        <div id = "votescreen"></div>
+                        <!--button class = "arrow">&gt;</button-->
                     </div>
                 </div>
             </div>
@@ -28,21 +31,45 @@
         </div>
         
         <script>
+            let tables = [];
+
             $(document).ready(() => {
                 let tableData = JSON.parse(`<%-tables%>`);
 
                 //Create menu
-                let menuItems = [];
                 let menuButton = $("<button></button>")
                     .addClass("menuSelect")
-                    .click((e) => {
-
+                    .click((e) => { //TODO: Move function to global scope
+                        $('ul.kernel').add('#submitwrapper').fadeOut(500, () => {
+                            console.log(tables);
+                            $('ul.kernel').remove();
+                            $('#submit').removeAttr('disabled');
+                            
+                            tables[parseInt(e.target.textContent)-1]
+                                .css({ display: 'none' })
+                                .appendTo($('#votescreen'))
+                                .insertBefore('#submitwrapper')
+                                .sortable({
+                                   placeholder: 'placeholder',
+                                   tolerance: 'pointer',
+                                   items: 'li:not(.hidden)'
+                                }).disableSelection()
+                                .add('#submitwrapper')
+                                .fadeIn(500, () => {
+                                    $('ul.kernel')
+                                        .add('#submitwrapper')
+                                        .css({ opacity: 1 });
+                                });
+                        });
                     });
-                menuItems.push(menuButton.clone(true).append($("<div></div>").addClass("trileft")));
-                for(let i = 1; i <= tableData.length; i++) menuItems.push(menuButton.clone(true).text(i));
-                menuItems.push(menuButton.clone(true).append($("<div></div>").addClass("triright")));
+                
+                for(let i = 1; i <= tableData.length; i++) {
+                    let mbtn = menuButton.clone(true)
+                        .text(i);
+                    if(localStorage.getItem('<%-round%>_hsub')?.includes(i.toString())) mbtn.addClass('bgreen'); 
+                    $(".menu").append(mbtn);
+                }
 
-                $(".menu").append(...menuItems);
 
                 //Create submit button and wrapper
                 let button = $("<button></button>")
@@ -50,7 +77,7 @@
                     .click(submit)
                     .text("Submit Votes");
 
-                let subreq = $("<span></span>")
+                let subreq = $("<div></div>")
                     .attr('id', 'subreq');
 
                 let submitWrapper = $("<div></div>")
@@ -58,7 +85,7 @@
                     .append(button, subreq);
 
                 //Create voting tables and elements
-                let tables = [];
+                let i = 0;
                 for(let table of tableData){
                     let list = $("<div></div>").addClass('border');
                     for(let resp of table){
@@ -75,12 +102,13 @@
                             .reduce((p, c) => c.textContent.length > p.textContent.length ? c : p)
                     );
                     let sizer = $('<li></li>')
-                        .text(largestInChild.text() + "le")
+                        .text(largestInChild.text() + "ee")
                         .addClass('item hidden');
 
                     tables.push(
                         $("<ul></ul>")
                             .addClass('kernel')
+                            .attr('sid', ++i)
                             .append(list, sizer)
                             .sortable({
                                placeholder: 'placeholder',
@@ -90,18 +118,21 @@
                     );
                 }
 
-                $('#votewrapper').append(tables[0], submitWrapper);
+                $('#votescreen').append(tables[0], submitWrapper);
             });
 
             function submit() {
                 document.getElementById('submit').setAttribute('disabled', '');
                 let res = "";
-                for(let elem of document.getElementsByClassName('border')){
+                let screen = $('ul.kernel').attr('sid');
+                
+                for(let elem of $('.border').toArray()){
                     res += Array.from(elem.children)
                         .filter(e => !e.classList.contains('hidden'))
                         .map(e => e.attributes.getNamedItem('rid').value)
-                        .join(',') + " ";
+                        .join(',');
                 }
+
                 let usp = new URLSearchParams({user: '<%-user.username%>'});
                 fetch(`/api/vote?${usp}`, { 
                     method: 'POST',
@@ -111,9 +142,20 @@
                         "X-auth": '<%-user.id%>'
                     }
                 }).then(res => {
-                    if(!res.ok) throw new Error(res.statusText);
-                    localStorage.setItem('<%-round%>_VOTE', res);
-                    document.getElementById('subreq').innerText = "Votes submitted! Refresh the page if you'd like to resubmit your vote.";
+                    if(!res.ok) {
+                        document.getElementById('subreq').classList.add('red');
+                        return document.getElementById('subreq').innerText = "ERROR: " + e;
+                    }
+                    console.log('hey');
+            
+                    let lstor = localStorage.getItem('<%-round%>_hsub');
+                    if(!lstor) localStorage.setItem('<%-round%>_hsub', screen);
+                    else if(!lstor.includes(screen)) localStorage.setItem('<%-round%>_hsub', lstor + screen);
+
+                    $(`.menuSelect:contains(${screen})`).addClass('bgreen');
+
+                    document.getElementById('subreq').innerText = "Votes submitted! You can now vote on another screen by clicking on another button above.";
+
                 }).catch(e => {
                     document.getElementById('subreq').classList.add('red');
                     document.getElementById('subreq').innerText = "ERROR: " + e; 
