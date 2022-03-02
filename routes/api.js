@@ -18,7 +18,7 @@ router.post('/respond', express.text(), async (req, res) => {
 
 router.post('/vote', express.text(), async (req, res) => {
     if(req.header("X-auth") !== req.session.user.id) return res.status(401).send("User mismatch error. Please refresh and try again.");
-    //if(req.config.mode !== "vote") return res.status(406).send("Hey, you can't access this resource right now!");
+    if(req.config.mode !== "vote") return res.status(406).send("Hey, you can't access this resource right now!");
     
     let userVote = req.body.split(",");
     /**@type {string}*/
