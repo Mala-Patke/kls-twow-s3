@@ -5,6 +5,7 @@ const { execSync } = require('child_process');
 const { join} = require('path');
 const db = require('../database/dbwrapper');
 const calculate = require('../lib/calculate');
+const { emails: exemptions } = require('./exemptions.json')
 require('dotenv').config();
 
 const router = express.Router();
@@ -54,24 +55,21 @@ router.get('/rounddata', async (req, res) => {
 });
 
 //Doing this horribleness all to avoid having to store emails in the database
-const exemptions = [
-    "Derek Vanderpool", "Brandon Lee", "Brianna Beehler", "Jessica Peters", "Chi-Ray Chien", "Chris Lippi", "Lejoi Reese"
-];
-
 router.get('/emails', (req, res) => {
     if(!req.query.code || AES.decrypt(req.query.code, process.env.SALT).toString(Utf8) !== "artichoke") return res.sendStatus(403);
     //This is super dumb but I'm too lazy to implement it properly lmao
-    let rawusers = execSync(`node query list_users ${req.query.ref} not`, { cwd: join(__dirname, "../scripts")})
+    let rawusers = execSync(`node query list_users ${req.query.ref}`, { cwd: join(__dirname, "../scripts")})
         .toString()
         .replace(/'/g, '"')
-        .replace(/[^a-z"\[\], ]/gi, '');
+        .replace(/[^a-z"\[\],\- ]/gi, '');
     let users = JSON.parse(rawusers);
 
     let emails = [];
     for(let user of users){
         let ret = "";
         ret += user.split(" ")[0];
-        if(!exemptions.includes(user)) ret += user.split(" ")[1][0];
+        if(Object.keys(exemptions).includes(ret)) ret = exemptions[ret]; 
+        else ret += user.split(" ")[1][0];
         ret += "@khanlabschool.org";
         emails.push(ret.toLowerCase());
     }

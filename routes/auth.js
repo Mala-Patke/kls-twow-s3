@@ -1,16 +1,10 @@
 const express = require('express');
 const { OAuth2Client } = require('google-auth-library');
 const User = require('../lib/user');
+const { names: rename } = require('./exemptions.json');
 
 const router = express.Router();
 const client = new OAuth2Client('227209584109-f54odnr6tn70muiu4fdqqrfbsbanm6cf.apps.googleusercontent.com');
-
-const rename = {
-    "Katarina":"Ainsel",
-    "Eric":"Sylvan",
-    "Leia":"Raine",
-    "Alisha":"Zaiga",
-};
 
 function verifyToken(idToken){
     return new Promise((res, rej) => {
