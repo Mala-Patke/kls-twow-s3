@@ -5,7 +5,7 @@ const { execSync } = require('child_process');
 const { join} = require('path');
 const db = require('../database/dbwrapper');
 const calculate = require('../lib/calculate');
-const { emails: exemptions } = require('./exemptions.json')
+const exemptions = require('./exemptions.json')
 require('dotenv').config();
 
 const router = express.Router();
@@ -68,9 +68,12 @@ router.get('/emails', (req, res) => {
     for(let user of users){
         let ret = "";
         ret += user.split(" ")[0];
-        if(Object.keys(exemptions).includes(ret)) ret = exemptions[ret]; 
-        else ret += user.split(" ")[1][0];
-        ret += "@khanlabschool.org";
+        if(exemptions[ret]) ret += exemptions[ret];
+        else {
+            if(Object.keys(exemptions.emails).includes(ret)) ret = exemptions.emails[ret]; 
+            else ret += user.split(" ")[1][0];
+            ret += "@khanlabschool.org";
+        }
         emails.push(ret.toLowerCase());
     }
     res.send(emails);
