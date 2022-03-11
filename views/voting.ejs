@@ -40,12 +40,19 @@
                 let menuButton = $("<button></button>")
                     .addClass("menuSelect")
                     .click((e) => { //TODO: Move function to global scope
+                        let targetIndex = parseInt(e.target.textContent)-1;
+                        console.log($('.menuSelect.bblue').text(), (targetIndex+1).toString())
+                        if($('.menuSelect.bblue').text() === (targetIndex+1).toString()) return; 
+                        $(`.menuSelect`)
+                                .removeClass('bblue')
+                                .filter(i => i === targetIndex)
+                                .addClass('bblue');
+
                         $('ul.kernel').add('#submitwrapper').fadeOut(500, () => {
-                            console.log(tables);
                             $('ul.kernel').remove();
                             $('#submit').removeAttr('disabled');
                             
-                            tables[parseInt(e.target.textContent)-1]
+                            tables[targetIndex]
                                 .css({ display: 'none' })
                                 .appendTo($('#votescreen'))
                                 .insertBefore('#submitwrapper')
@@ -119,6 +126,7 @@
                 }
 
                 $('#votescreen').append(tables[0], submitWrapper);
+                $('.menuSelect').first().addClass('bblue');
             });
 
             function submit() {
