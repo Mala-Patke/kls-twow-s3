@@ -68,7 +68,7 @@ router.get('/emails', (req, res) => {
     for(let user of users){
         let ret = "";
         ret += user.split(" ")[0];
-        if(exemptions[ret]) ret += exemptions[ret];
+        if(exemptions[ret]) ret = exemptions[ret];
         else {
             if(Object.keys(exemptions.emails).includes(ret)) ret = exemptions.emails[ret]; 
             else ret += user.split(" ")[1][0];
