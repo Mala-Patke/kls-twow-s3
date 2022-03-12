@@ -151,8 +151,7 @@
                     }
                 }).then(res => {
                     if(!res.ok) {
-                        document.getElementById('subreq').classList.add('red');
-                        return document.getElementById('subreq').innerText = "ERROR: " + e;
+                        return alert(`ERROR: ${res.statusText}. Please Refresh and resubmit`);
                     }
                     console.log('hey');
             
@@ -165,8 +164,9 @@
                     document.getElementById('subreq').innerText = "Votes submitted! You can now vote on another screen by clicking on another button above.";
 
                 }).catch(e => {
-                    document.getElementById('subreq').classList.add('red');
-                    document.getElementById('subreq').innerText = "ERROR: " + e; 
+                    //document.getElementById('subreq').classList.add('red');
+                    //document.getElementById('subreq').innerText = "ERROR: " + e;
+                    alert(`ERROR: ${e}. Please refresh and resubmit`);
                 });
             }
         </script>

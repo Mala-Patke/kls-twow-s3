@@ -17,12 +17,11 @@ app.disable('x-powered-by');
 function handleError(e) {
     dlog(`Hey <@674140360079048714>, there's an error with TWOW: \`${e}.\` Check the logs for a stacktrace.`);
     console.error(e);
-    console.timeLog();
+    console.log(new Date(Date.now()));
 }
 
 process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
-console.time('errorTimer')
 
 app.use(session({
     store: new RedisStore({ client: RedisClient }),
