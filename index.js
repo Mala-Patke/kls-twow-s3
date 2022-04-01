@@ -69,6 +69,7 @@ function main(req, res) {
 
     let swich = {
         "demo": () => {
+            return res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
             res.render('demo', { user: req.session.user });
         },
         "respond": () => {
