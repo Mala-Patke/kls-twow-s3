@@ -14,6 +14,10 @@ module.exports.handleVote = function(round, user, vote){
     set(ref(`${round}/voting/${user}`), vote);
 }
 
+module.exports.handleLeaderboardUpdate = lb => {
+    set(ref(`leaderboard`), lb);
+} 
+
 module.exports.handleConfigUpdate = (config) => {
     set(ref(`config`), config);
 }
@@ -37,6 +41,14 @@ module.exports.getVotes = function(round){
 module.exports.getConfig = function(){
     return new Promise((res, rej) => {
         onValue(ref('config'), data => {
+            res(data.toJSON());
+        }, rej, { onlyOnce: true })
+    })
+}
+
+module.exports.getLB = function(){
+    return new Promise((res, rej) => {
+        onValue(ref('leaderboard'), data => {
             res(data.toJSON());
         }, rej, { onlyOnce: true })
     })

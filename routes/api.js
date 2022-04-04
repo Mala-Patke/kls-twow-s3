@@ -38,11 +38,17 @@ router.post('/vote', express.text(), async (req, res) => {
 });
 
 router.post('/updateconfig', express.text(), async (req, res) => {
-    let data = JSON.parse(req.body); //Couldn't figure out how to do it with application/json lmao
+    let data = JSON.parse(req.body); 
     if(!["Timothy Chien", "Ali Shahid"].includes(req.session.user.username)) return res.sendStatus(403);
 
     db.handleConfigUpdate(data)
     writeFileSync('./config.json', JSON.stringify(data));
+    res.sendStatus(200);
+});
+
+router.post('/updatelb', express.json(), (req, res) => {
+    if(!req.query.code || AES.decrypt(req.query.code, process.env.SALT).toString(Utf8) !== "artichoke") return res.sendStatus(403);
+    db.handleLeaderboardUpdate(req.body);
     res.sendStatus(200);
 });
 

@@ -35,6 +35,7 @@ app.use(clog);
 app.use(async (req, res, next) => {
     try{
         req.config = await db.getConfig();
+        req.lb = await db.getLB();
     } catch (e){
         next(e)
     }
@@ -72,7 +73,7 @@ function main(req, res) {
             res.render('demo', { user: req.session.user });
         },
         "respond": () => {
-            res.render('prompt', { round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
+            res.render('prompt', { round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.lb });
         },
         "vote": () => {
             db.getResponses(req.config.round)
@@ -80,7 +81,7 @@ function main(req, res) {
                 let tables = JSON.stringify(  
                     createVotingTables(resps, req.config.round, req.session.user.id, req.config.resp_per_screen)
                 ).replace(/\\/g, "\\\\\\"); //to help the JSON.parse on the other side
-                res.render('voting', { tables, round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.config.leaderboard });
+                res.render('voting', { tables, round: req.config.round, prompt: req.config.prompt, user: req.session.user, leaderboard: req.lb });
             });
         }
     }

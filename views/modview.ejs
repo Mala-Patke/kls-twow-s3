@@ -16,24 +16,6 @@
             <option value="No">No</option>
         </select><br>
         Responses Per Screen:<input id = "screen" value ="<%- config.resp_per_screen %>"><br>
-        Top 10 of last week:<br>
-        <div id = "lr">
-            <% let lrentry = Object.entries(config.leaderboard.lr).sort((a, b) => parseFloat(b[1]) - parseFloat(a[1])) %>
-            <% for(let i = 1; i <= 10; i++) { %>
-                <input id = "lrn<%-i%>"  value = "<%-lrentry[i-1] ? lrentry[i-1][0] : ""%>">
-                <input id = "lrs<%-i%>"  value = "<%-lrentry[i-1] ? lrentry[i-1][1] : ""%>">
-                <br>
-            <% } %>
-        </div>
-        Top 10 of all time:<br>
-        <div id = "comp">
-            <% let compEntry = Object.entries(config.leaderboard.comp).sort((a, b) => parseFloat(b[1]) - parseFloat(a[1])) %>
-            <% for(let i = 1; i <= 10; i++) { %>
-                <input id = "compn<%-i%>" value = "<%-compEntry[i-1] ? compEntry[i-1][0] : ""%>">
-                <input id = "comps<%-i%>" value = "<%-compEntry[i-1] ? compEntry[i-1][1] : ""%>">
-                <br>
-            <% } %>       
-        </div>
         <button id = "submit">Submit Changes</button>
     </body> 
 
@@ -50,29 +32,6 @@
         }
 
         document.getElementById('submit').addEventListener('click', () => {
-            let lbobj = {
-                lr:{},
-                comp:{}
-            };
-            for(let i = 1; i <= 10; i++){
-                let lrn = document.getElementById(`lrn${i}`).value.trim().replace(/.[]\/\$#/gi, "");
-                let lrs = document.getElementById(`lrs${i}`).value.trim().replace(/.[]\/\$#/gi, "");
-                if(lrn.length) {
-                    Object.defineProperty(lbobj.lr, lrn, {
-                        value: lrs,
-                        enumerable: true
-                    });
-                }
-
-                let compn = document.getElementById(`compn${i}`).value.trim().replace(/.[]\/\$#/gi, "");
-                let comps = document.getElementById(`comps${i}`).value.trim().replace(/.[]\/\$#/gi, "");
-                if(compn.length){ 
-                    Object.defineProperty(lbobj.comp, compn, {
-                        value: comps,
-                        enumerable: true
-                    });
-                }
-            }
             fetch('/api/updateconfig', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -81,7 +40,6 @@
                     'prompt': document.getElementById('prompt').value.replace(/.[]\/\$#/gi, ""),
                     'resp_per_screen': document.getElementById('screen').value,
                     'allowingNewUsers': document.getElementById('ANU').value === "Yes",
-                    'leaderboard': lbobj
                 }),
                 headers: {
                     'Content-Type':'text/plain'
