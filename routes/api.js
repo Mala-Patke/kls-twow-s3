@@ -70,7 +70,7 @@ router.get('/emails', (req, res) => {
         .replace(/[^a-z"\[\],\- ]/gi, '');
     let users = JSON.parse(rawusers);
 
-    let emails = [];
+    let emails = {};
     for(let user of users){
         let ret = "";
         ret += user.split(" ")[0];
@@ -80,7 +80,7 @@ router.get('/emails', (req, res) => {
             else ret += user.split(" ")[1][0];
             ret += "@khanlabschool.org";
         }
-        emails.push(ret.toLowerCase());
+        emails[user.split(" ")[0]] = ret.toLowerCase();
     }
     res.send(emails);
 });

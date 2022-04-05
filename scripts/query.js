@@ -14,11 +14,13 @@ const hash = e => PBKDF2(e, process.env.SALT, { keySize: 2 }).toString();
 const commands = {
     'count': (data) => {
         console.log(Object.keys(data).length);
+        process.exit();
     },
     'has': (data) => {
         console.log(
             Object.keys(data).includes(hash(args))
         );
+        process.exit();
     },
     'list': (data) => {
         console.log(Object.values(data));
@@ -31,10 +33,12 @@ const commands = {
                     .map(e => e[1].username)
                     .sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0))
             );
+            process.exit();
         });
     },
     'get': (data) => {
         console.log(data[hash(args)]);
+        process.exit();
     }
 }
 
@@ -57,8 +61,11 @@ const dbrefs = {
                 .then(res)
                 .catch(rej);
         })
+    ), 
+    't': new Promise(res => 
+        res({'634d3e5c4a14d714':'1'}) 
     )
 };
 
 //console.log(command, dbref, args)
-dbrefs[dbref].then(commands[command]).then(() => process.exit());
+dbrefs[dbref].then(commands[command]);
