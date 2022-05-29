@@ -80,7 +80,7 @@ router.get('/emails', (req, res) => {
             else ret += user.split(" ")[1][0];
             ret += "@khanlabschool.org";
         }
-        emails[user.split(" ")[0]] = ret.toLowerCase();
+        emails[user.split(" ")[0] + user.split(" ")[1][0]] = ret.toLowerCase();
     }
     res.send(emails);
 });
